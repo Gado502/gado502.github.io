@@ -1818,6 +1818,345 @@
                 font-size: 1rem;
             }
         }
+
+    </style>
+<style>
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+            color: white;
+        }
+        
+        .contact-form-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            color: #333;
+        }
+        
+        .contact-form-container h2 {
+            margin-bottom: 20px;
+            color: #1a2a6c;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #1a2a6c;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 42, 108, 0.2);
+        }
+        
+        .contact-submit-btn {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+        
+        .contact-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 42, 108, 0.4);
+        }
+        
+        .contact-notification {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .submissions-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-height: 600px;
+            overflow-y: auto;
+            color: #333;
+        }
+        
+        .submissions-container h2 {
+            margin-bottom: 20px;
+            color: #1a2a6c;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 0;
+            z-index: 1;
+        }
+        
+        .submission-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .submission-name {
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+        
+        .submission-email {
+            color: #b21f1f;
+            font-size: 14px;
+        }
+        
+        .submission-date {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        .submission-message {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .response-section {
+            background: #f0f5ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .response-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+        
+        .response-btn {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .response-display {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 5px;
+            border-left: 3px solid #4caf50;
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+        
+        .no-submissions {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .delete-btn {
+            background: #b21f1f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-pending {
+            background: #ffecb3;
+            color: #7d6608;
+        }
+        
+        .status-responded {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .email-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .email-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .email-modal h3 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .email-modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .email-modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .email-modal-confirm {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .email-modal-cancel {
+            background: #ccc;
+            color: #333;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1992,6 +2331,13 @@ My goal is to enhance user experiences through thoughtful, user-centered design.
         </div>
         
             </div>
+<div class="submissions-container">
+                <h2>Customer Inquiries <span id="inquiry-count"></span></h2>
+                <div id="submissions-list">
+                    <div class="no-submissions">No submissions yet. Be the first to contact us!</div>
+                </div>
+            </div>
+        </div>
     </section>
 
 
@@ -2148,6 +2494,10 @@ My goal is to enhance user experiences through thoughtful, user-centered design.
                 </div>
             </div>
             
+            <div class="container">
+        
+        
+        <div class="content">
             <div class="contact-form-container">
                 <h2>Send Us a Message</h2>
                 
@@ -2163,14 +2513,47 @@ My goal is to enhance user experiences through thoughtful, user-centered design.
                     </div>
                     
                     <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" required>
+                            <option value="">Select a subject</option>
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Support">Support Request</option>
+                            <option value="Feedback">Feedback</option>
+                            <option value="Complaint">Complaint</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="message">Your Message</label>
-                        <textarea id="message" placeholder="Type your message here" required></textarea>
+                        <textarea id="message" rows="5" placeholder="Type your message here" required></textarea>
                     </div>
                     
                     <button type="submit" class="contact-submit-btn">
                         <i class="fas fa-paper-plane"></i> Send Message
                     </button>
                 </form>
+                
+                <div id="notification" class="contact-notification"></div>
+            </div>
+            
+            
+        
+        
+    </div>
+
+    <div id="email-modal" class="email-modal">
+        <div class="email-modal-content">
+            <h3>Send Response Email</h3>
+            <p>This will send an email response to: <span id="customer-email"></span></p>
+            <p>Response: <span id="response-preview"></span></p>
+            <div class="email-modal-buttons">
+                <button id="confirm-email" class="email-modal-btn email-modal-confirm">Send Email</button>
+                <button id="cancel-email" class="email-modal-btn email-modal-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
                 
                 <div id="notification" class="contact-notification"></div>
             </div>
@@ -2201,6 +2584,405 @@ My goal is to enhance user experiences through thoughtful, user-centered design.
     </div>
 
     <script>
+document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the database
+            let db;
+            const DB_NAME = 'CustomerContactDB';
+            const DB_VERSION = 2;
+            const STORE_NAME = 'submissions';
+            const RESPONSE_STORE = 'responses';
+            
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            
+            request.onerror = function(event) {
+                console.error('Database error:', event.target.error);
+                showNotification('Error initializing database. Form data will not be saved.', 'error');
+            };
+            
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                
+                // Create object store for submissions if it doesn't exist
+                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    const objectStore = db.createObjectStore(STORE_NAME, { 
+                        keyPath: 'id', 
+                        autoIncrement: true 
+                    });
+                    
+                    // Create indexes for searching
+                    objectStore.createIndex('name', 'name', { unique: false });
+                    objectStore.createIndex('email', 'email', { unique: false });
+                    objectStore.createIndex('date', 'date', { unique: false });
+                    objectStore.createIndex('subject', 'subject', { unique: false });
+                }
+                
+                // Create object store for responses if it doesn't exist
+                if (!db.objectStoreNames.contains(RESPONSE_STORE)) {
+                    const responseStore = db.createObjectStore(RESPONSE_STORE, {
+                        keyPath: 'id',
+                        autoIncrement: true
+                    });
+                    
+                    responseStore.createIndex('submissionId', 'submissionId', { unique: false });
+                    responseStore.createIndex('date', 'date', { unique: false });
+                }
+            };
+            
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                console.log('Database initialized successfully');
+                loadSubmissions();
+            };
+            
+            // Load submissions from the database
+            function loadSubmissions() {
+                if (!db) return;
+                
+                const transaction = db.transaction([STORE_NAME], 'readonly');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const request = objectStore.getAll();
+                
+                request.onsuccess = function() {
+                    displaySubmissions(request.result);
+                    document.getElementById('inquiry-count').textContent = `(${request.result.length})`;
+                };
+                
+                request.onerror = function() {
+                    console.error('Error loading submissions');
+                };
+            };
+            
+            // Display submissions in the UI
+            function displaySubmissions(submissions) {
+                const submissionsList = document.getElementById('submissions-list');
+                
+                if (submissions.length === 0) {
+                    submissionsList.innerHTML = '<div class="no-submissions">No submissions yet. Be the first to contact us!</div>';
+                    return;
+                }
+                
+                // Sort by date (newest first)
+                submissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                let html = '';
+                submissions.forEach(submission => {
+                    // Check if this submission has responses
+                    checkResponseStatus(submission.id).then(hasResponse => {
+                        const statusClass = hasResponse ? 'status-responded' : 'status-pending';
+                        const statusText = hasResponse ? 'Responded' : 'Pending';
+                        
+                        html += `
+                            <div class="submission-card" data-id="${submission.id}">
+                                <div class="submission-header">
+                                    <div>
+                                        <div class="submission-name">${submission.name} 
+                                            <span class="status-badge ${statusClass}">${statusText}</span>
+                                        </div>
+                                        <div class="submission-email">${submission.email}</div>
+                                        <div class="submission-subject">Subject: ${submission.subject}</div>
+                                    </div>
+                                    <div class="submission-date">${new Date(submission.date).toLocaleString()}</div>
+                                </div>
+                                <div class="submission-message">${submission.message}</div>
+                                
+                                <div class="response-section">
+                                    <h4>Response:</h4>
+                                    <div class="response-form">
+                                        <textarea id="response-${submission.id}" placeholder="Type your response here"></textarea>
+                                        <button class="response-btn" onclick="submitResponse(${submission.id})">
+                                            <i class="fas fa-reply"></i> Send Response
+                                        </button>
+                                    </div>
+                                    <div id="response-display-${submission.id}" class="response-display"></div>
+                                </div>
+                                
+                                <div class="actions">
+                                    <button class="delete-btn" onclick="deleteSubmission(${submission.id})">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        submissionsList.innerHTML = html;
+                        
+                        // Load any existing responses
+                        loadResponses();
+                    });
+                });
+            };
+            
+            // Check if a submission has responses
+            function checkResponseStatus(submissionId) {
+                return new Promise((resolve) => {
+                    if (!db) resolve(false);
+                    
+                    const transaction = db.transaction([RESPONSE_STORE], 'readonly');
+                    const objectStore = transaction.objectStore(RESPONSE_STORE);
+                    const index = objectStore.index('submissionId');
+                    const request = index.getAll(submissionId);
+                    
+                    request.onsuccess = function() {
+                        resolve(request.result.length > 0);
+                    };
+                    
+                    request.onerror = function() {
+                        resolve(false);
+                    };
+                });
+            };
+            
+            // Load and display responses
+            function loadResponses() {
+                if (!db) return;
+                
+                const transaction = db.transaction([RESPONSE_STORE], 'readonly');
+                const objectStore = transaction.objectStore(RESPONSE_STORE);
+                const request = objectStore.getAll();
+                
+                request.onsuccess = function() {
+                    request.result.forEach(response => {
+                        const responseDisplay = document.getElementById(`response-display-${response.submissionId}`);
+                        if (responseDisplay) {
+                            responseDisplay.innerHTML = `
+                                <div class="response-header">
+                                    <span>Your Response</span>
+                                    <span class="response-date">${new Date(response.date).toLocaleString()}</span>
+                                </div>
+                                <div class="response-message">${response.message}</div>
+                            `;
+                            
+                            // Hide the response form if response already exists
+                            const responseForm = responseDisplay.previousElementSibling;
+                            if (responseForm.classList.contains('response-form')) {
+                                responseForm.style.display = 'none';
+                            }
+                        }
+                    });
+                };
+            };
+            
+            // Submit a response to a submission
+            window.submitResponse = function(submissionId) {
+                if (!db) return;
+                
+                const responseText = document.getElementById(`response-${submissionId}`).value;
+                if (!responseText) {
+                    showNotification('Please enter a response message', 'error');
+                    return;
+                }
+                
+                // Get customer email to show in modal
+                const transaction = db.transaction([STORE_NAME], 'readonly');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const getRequest = objectStore.get(submissionId);
+                
+                getRequest.onsuccess = function() {
+                    const submission = getRequest.result;
+                    if (!submission) {
+                        showNotification('Submission not found', 'error');
+                        return;
+                    }
+                    
+                    // Show email confirmation modal
+                    document.getElementById('customer-email').textContent = submission.email;
+                    document.getElementById('response-preview').textContent = responseText.length > 50 ? 
+                        responseText.substring(0, 50) + '...' : responseText;
+                    
+                    const emailModal = document.getElementById('email-modal');
+                    emailModal.style.display = 'flex';
+                    
+                    // Set up confirm button
+                    document.getElementById('confirm-email').onclick = function() {
+                        // Save response to database
+                        saveResponseToDB(submissionId, responseText);
+                        
+                        // Simulate sending email
+                        simulateEmailSending(submission.email, responseText);
+                        
+                        // Close modal
+                        emailModal.style.display = 'none';
+                    };
+                    
+                    // Set up cancel button
+                    document.getElementById('cancel-email').onclick = function() {
+                        emailModal.style.display = 'none';
+                    };
+                };
+            };
+            
+            // Save response to database
+            function saveResponseToDB(submissionId, responseText) {
+                const transaction = db.transaction([RESPONSE_STORE], 'readwrite');
+                const objectStore = transaction.objectStore(RESPONSE_STORE);
+                
+                const response = {
+                    submissionId: submissionId,
+                    message: responseText,
+                    date: new Date().toISOString()
+                };
+                
+                const request = objectStore.add(response);
+                
+                request.onsuccess = function() {
+                    showNotification('Response sent successfully!', 'success');
+                    
+                    // Update the UI
+                    const responseDisplay = document.getElementById(`response-display-${submissionId}`);
+                    responseDisplay.innerHTML = `
+                        <div class="response-header">
+                            <span>Your Response</span>
+                            <span class="response-date">${new Date(response.date).toLocaleString()}</span>
+                        </div>
+                        <div class="response-message">${response.message}</div>
+                    `;
+                    
+                    // Hide the response form
+                    const responseForm = responseDisplay.previousElementSibling;
+                    responseForm.style.display = 'none';
+                    
+                    // Update status badge
+                    const statusBadge = document.querySelector(`.submission-card[data-id="${submissionId}"] .status-badge`);
+                    statusBadge.className = 'status-badge status-responded';
+                    statusBadge.textContent = 'Responded';
+                };
+                
+                request.onerror = function() {
+                    showNotification('Error saving response', 'error');
+                };
+            };
+            
+            // Simulate sending email
+            function simulateEmailSending(email, message) {
+                console.log(`Simulating email to: ${email}`);
+                console.log(`Message: ${message}`);
+                
+                // In a real implementation, you would integrate with an email API here
+                // For example: SendGrid, Mailgun, or a server-side endpoint
+                
+                // This is just a simulation
+                setTimeout(() => {
+                    console.log('Email sent successfully (simulated)');
+                }, 1500);
+            };
+            
+            // Delete a submission
+            window.deleteSubmission = function(id) {
+                if (!db) return;
+                
+                if (confirm('Are you sure you want to delete this submission?')) {
+                    const transaction = db.transaction([STORE_NAME, RESPONSE_STORE], 'readwrite');
+                    const submissionStore = transaction.objectStore(STORE_NAME);
+                    const responseStore = transaction.objectStore(RESPONSE_STORE);
+                    
+                    // Delete the submission
+                    const submissionRequest = submissionStore.delete(id);
+                    
+                    // Also delete any responses linked to this submission
+                    const index = responseStore.index('submissionId');
+                    const responseRequest = index.openCursor(IDBKeyRange.only(id));
+                    
+                    responseRequest.onsuccess = function() {
+                        const cursor = responseRequest.result;
+                        if (cursor) {
+                            responseStore.delete(cursor.primaryKey);
+                            cursor.continue();
+                        }
+                    };
+                    
+                    submissionRequest.onsuccess = function() {
+                        console.log('Submission deleted');
+                        loadSubmissions();
+                    };
+                    
+                    submissionRequest.onerror = function() {
+                        console.error('Error deleting submission');
+                        showNotification('Error deleting submission', 'error');
+                    };
+                }
+            };
+            
+            // Show notification
+            function showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `contact-notification notification ${type}`;
+                
+                // Hide notification after 5 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.className = 'contact-notification';
+                        notification.style.opacity = '1';
+                    }, 300);
+                }, 5000);
+            }
+            
+            // Contact form submission
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                
+                // Validate form
+                if (!name || !email || !subject || !message) {
+                    showNotification('Please fill in all fields', 'error');
+                    return;
+                }
+                
+                // Show loading state
+                const submitBtn = this.querySelector('button');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                submitBtn.disabled = true;
+                
+                // Save to database
+                if (db) {
+                    const transaction = db.transaction([STORE_NAME], 'readwrite');
+                    const objectStore = transaction.objectStore(STORE_NAME);
+                    
+                    const submission = {
+                        name: name,
+                        email: email,
+                        subject: subject,
+                        message: message,
+                        date: new Date().toISOString()
+                    };
+                    
+                    const request = objectStore.add(submission);
+                    
+                    request.onsuccess = function() {
+                        // Show success message
+                        showNotification('Your message has been sent successfully! We will get back to you soon.', 'success');
+                        document.getElementById('contact-form').reset();
+                        
+                        // Reload submissions
+                        loadSubmissions();
+                        
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    };
+                    
+                    request.onerror = function() {
+                        showNotification('There was an error sending your message. Please try again.', 'error');
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    };
+                } else {
+                    showNotification('Database not available. Please try again later.', 'error');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+            
+            // Initial load of responses
+            loadResponses();
+        });
+
         // Particles.js initialization
         document.addEventListener('DOMContentLoaded', function() {
             // Simulate particles.js initialization
