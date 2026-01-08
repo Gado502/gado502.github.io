@@ -352,300 +352,7 @@
             border-radius: 2px;
         }
 
-        /* About Grid with Enhanced Animations */
-        .about-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
-            margin-top: 3rem;
-        }
-
-        .about-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-light);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            transition: all 0.4s ease;
-            transform: translateY(50px);
-            opacity: 0;
-        }
-
-        .about-card.animated {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .about-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-light);
-            background: rgba(108, 99, 255, 0.15);
-        }
-
-        .about-card i {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-size: 2rem;
-            transition: var(--transition);
-        }
-
-        .about-card:hover i {
-            transform: scale(1.2) rotate(5deg);
-            color: var(--secondary);
-        }
-
-        /* Timeline */
-        .timeline-section {
-            padding: 5rem 10%;
-            position: relative;
-        }
-
-        .timeline {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            width: 4px;
-            background: linear-gradient(to bottom, var(--primary) 0%, var(--secondary) 100%);
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        .timeline-item {
-            padding: 20px 40px;
-            position: relative;
-            width: 50%;
-            box-sizing: border-box;
-            margin-bottom: 30px;
-        }
-
-        .timeline-item:nth-child(odd) {
-            left: 0;
-            padding-right: 80px;
-        }
-
-        .timeline-item:nth-child(even) {
-            left: 50%;
-            padding-left: 80px;
-        }
-
-        .timeline-date {
-            position: absolute;
-            width: 140px;
-            background: var(--primary);
-            color: white;
-            text-align: center;
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-weight: bold;
-            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
-        }
-
-        .timeline-item:nth-child(odd) .timeline-date {
-            right: -170px;
-        }
-
-        .timeline-item:nth-child(even) .timeline-date {
-            left: -170px;
-        }
-
-        /* Projects with Enhanced Animations */
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .project-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: var(--border-radius);
-            transition: all 0.4s ease;
-            transform: translateY(50px);
-            opacity: 0;
-        }
-
-        .project-card.animated {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .project-card img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            transition: var(--transition);
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-        }
-
-        .project-card:hover img {
-            transform: scale(1.05);
-        }
-
-        .project-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: var(--transition);
-            border-radius: 10px;
-        }
-
-        .project-card:hover .project-overlay {
-            opacity: 1;
-        }
-
-        .tech-tags {
-            display: flex;
-            gap: 0.5rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        .tech-tags span {
-            background: rgba(108, 99, 255, 0.2);
-            color: var(--primary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .project-card:hover .tech-tags span {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Blog Section with Enhanced Animations */
-        .blog-section {
-            padding: 5rem 10%;
-        }
-
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            margin: 3rem 0;
-        }
-
-        .blog-card {
-            transition: all 0.4s ease;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(50px);
-            opacity: 0;
-        }
-
-        .blog-card.animated {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .blog-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-light);
-        }
-
-        .blog-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px 10px 0 0;
-            transition: var(--transition);
-        }
-
-        .blog-card:hover .blog-image {
-            transform: scale(1.05);
-        }
-
-        .blog-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .blog-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            color: var(--gray);
-        }
-
-        .blog-category {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .blog-card:hover .blog-category {
-            background: var(--secondary);
-            transform: translateY(-2px);
-        }
-
-        .blog-title {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-            transition: var(--transition);
-        }
-
-        .blog-card:hover .blog-title {
-            color: var(--primary);
-        }
-
-        .blog-excerpt {
-            color: var(--gray);
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-        }
-
-        .blog-read-more {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: var(--transition);
-        }
-
-        .blog-card:hover .blog-read-more {
-            color: var(--secondary);
-            gap: 1rem;
-        }
-
-        /* Contact Section Styles */
+        /* Contact Form Styles */
         .contact-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -757,6 +464,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
@@ -765,24 +473,21 @@
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             padding: 1rem 1.2rem;
             border: 1px solid var(--glass-light);
-            border-radius: 50px;
+            border-radius: 12px;
             background: var(--glass-light);
             color: var(--dark);
             font-family: 'Poppins', sans-serif;
             transition: var(--transition);
-        }
-
-        .form-group textarea {
-            border-radius: 20px;
-            min-height: 150px;
-            resize: vertical;
+            font-size: 1rem;
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
@@ -797,12 +502,13 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            border-radius: 50px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 1.1rem;
             cursor: pointer;
             transition: var(--transition);
             margin-top: 1rem;
+            width: 100%;
             box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
         }
 
@@ -811,24 +517,33 @@
             box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
         }
 
+        .contact-submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
         .contact-notification {
             margin-top: 1.5rem;
             padding: 1rem;
             border-radius: 10px;
             text-align: center;
+            font-weight: 500;
             display: none;
         }
 
-        .contact-notification.success {
+        .notification.success {
             background: rgba(76, 175, 80, 0.2);
             color: #4CAF50;
             border: 1px solid rgba(76, 175, 80, 0.3);
+            display: block;
         }
 
-        .contact-notification.error {
+        .notification.error {
             background: rgba(244, 67, 54, 0.2);
             color: #F44336;
             border: 1px solid rgba(244, 67, 54, 0.3);
+            display: block;
         }
 
         /* Social Links */
@@ -898,22 +613,6 @@
             background: var(--primary-dark);
         }
 
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-small {
-            padding: 0.5rem 1.2rem;
-            font-size: 0.9rem;
-        }
-
         /* Theme Toggle */
         .theme-btn {
             position: fixed;
@@ -973,107 +672,6 @@
             background: var(--primary-dark);
         }
 
-        /* Notification System */
-        .notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .notification {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-light);
-            border-radius: var(--border-radius);
-            padding: 15px 20px;
-            min-width: 300px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: var(--shadow);
-            transform: translateX(100%);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .notification.hide {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-
-        .notification-icon {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .notification-success .notification-icon {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4CAF50;
-        }
-
-        .notification-error .notification-icon {
-            background: rgba(244, 67, 54, 0.2);
-            color: #F44336;
-        }
-
-        .notification-info .notification-icon {
-            background: rgba(33, 150, 243, 0.2);
-            color: #2196F3;
-        }
-
-        .notification-warning .notification-icon {
-            background: rgba(255, 193, 7, 0.2);
-            color: #FFC107;
-        }
-
-        .notification-content {
-            flex-grow: 1;
-        }
-
-        .notification-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-
-        .notification-message {
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-
-        .notification-close {
-            background: none;
-            border: none;
-            color: var(--gray);
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: var(--transition);
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .notification-close:hover {
-            color: var(--dark);
-        }
-
         /* Role Badges */
         .role-badges {
             display: flex;
@@ -1097,135 +695,6 @@
             background: var(--primary);
             color: white;
             transform: translateY(-2px);
-        }
-
-        /* Services Styles */
-        .services-section {
-            padding: 5rem 10%;
-        }
-
-        .book-cover {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: 20px;
-            padding: 40px;
-            color: white;
-            text-align: center;
-            margin-bottom: 40px;
-            box-shadow: var(--shadow);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .service-tier {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            border: 1px solid var(--glass-light);
-        }
-
-        .service-tier:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-light);
-        }
-
-        .tier-header {
-            padding: 25px;
-            text-align: center;
-            color: white;
-        }
-
-        .tier-basic .tier-header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .tier-advanced .tier-header {
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-        }
-
-        .tier-premium .tier-header {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-        }
-
-        .tier-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-
-        .tier-title {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .tier-price {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .tier-body {
-            padding: 25px;
-            color: var(--dark);
-        }
-
-        .tier-features {
-            list-style: none;
-            margin: 20px 0;
-        }
-
-        .tier-features li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            color: var(--dark);
-        }
-
-        .tier-features li i {
-            margin-right: 10px;
-            width: 24px;
-            text-align: center;
-        }
-
-        .tier-basic .tier-features li i {
-            color: #4facfe;
-        }
-
-        .tier-advanced .tier-features li i {
-            color: #ff758c;
-        }
-
-        .tier-premium .tier-features li i {
-            color: #ff9a9e;
-        }
-
-        .tier-cta {
-            display: block;
-            text-align: center;
-            padding: 15px;
-            background: var(--primary);
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            margin-top: 20px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .tier-cta:hover {
-            background: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
         }
 
         /* Responsive Design */
@@ -1255,25 +724,6 @@
             .hero-image img {
                 width: 280px;
             }
-
-            .timeline::before {
-                left: 31px;
-            }
-
-            .timeline-item {
-                width: 100%;
-                padding-left: 80px;
-                padding-right: 25px;
-            }
-
-            .timeline-item:nth-child(even) {
-                left: 0;
-            }
-
-            .timeline-date {
-                left: 15px !important;
-                right: auto !important;
-            }
             
             .contact-content {
                 grid-template-columns: 1fr;
@@ -1298,14 +748,6 @@
                 top: 140px;
             }
 
-            .notification {
-                min-width: 250px;
-            }
-
-            .role-badges {
-                justify-content: center;
-            }
-            
             .social-links {
                 margin-top: 1.5rem;
             }
@@ -1316,12 +758,6 @@
             
             .hero-image img {
                 width: 250px;
-            }
-            
-            .blog-grid,
-            .project-grid,
-            .about-grid {
-                grid-template-columns: 1fr;
             }
 
             .contact-method {
@@ -1373,16 +809,6 @@
             section {
                 padding: 80px 5%;
             }
-
-            .notification {
-                min-width: calc(100vw - 40px);
-                right: 10px;
-                left: 10px;
-            }
-
-            .typewriter {
-                font-size: 0.9rem;
-            }
             
             .contact-container {
                 padding: 1rem;
@@ -1401,7 +827,8 @@
             }
             
             .form-group input,
-            .form-group textarea {
+            .form-group textarea,
+            .form-group select {
                 padding: 0.8rem 1rem;
             }
             
@@ -1432,19 +859,6 @@
             .role-badge {
                 font-size: 0.8rem;
                 padding: 0.4rem 0.8rem;
-            }
-            
-            .tech-tags span {
-                font-size: 0.7rem;
-            }
-            
-            .blog-title {
-                font-size: 1.2rem;
-            }
-            
-            .blog-meta {
-                flex-direction: column;
-                gap: 0.5rem;
             }
         }
         
@@ -1483,9 +897,6 @@
 <body>
     <!-- Particle Background -->
     <div id="particles-js"></div>
-
-    <!-- Notification Container -->
-    <div class="notification-container" id="notification-container"></div>
 
     <!-- Floating Navigation -->
     <nav class="glass-nav">
@@ -1531,7 +942,7 @@
                 <a href="#projects" class="btn btn-primary">
                     <i class="fas fa-eye"></i> View My Work
                 </a>
-                <a href="#contact" class="btn btn-secondary">
+                <a href="#contact" class="btn btn-primary">
                     <i class="fas fa-paper-plane"></i> Contact Me
                 </a>
             </div>
@@ -1544,205 +955,22 @@
     <!-- About Section -->
     <section id="about">
         <h2 class="section-title">About Me</h2>
-        <div class="about-grid">
+        <div class="about-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-top: 3rem;">
             <div class="glass-card about-card">
                 <i class="fas fa-user-graduate fa-2x"></i>
                 <h3>Education</h3>
-                <p>I hold a Master's degree in Computer Science and Engineering from Adama Science and Technology University, where I specialized in Web Technologies, UI/UX Design, and Cloud Computing. Prior to this, I earned a Bachelor's degree in Information Systems from Haramaya University, which laid the foundation for my expertise in computer science and information management.</p>
+                <p>I hold a Master's degree in Computer Science and Engineering from Adama Science and Technology University, where I specialized in Web Technologies, UI/UX Design, and Cloud Computing.</p>
             </div>
             <div class="glass-card about-card">
                 <i class="fas fa-briefcase fa-2x"></i>
                 <h3>Experience</h3>
-                <p>With 5+ years of experience in web development, I have also worked as a System Administrator, Project Manager, and Graphic Designer, supporting both startups and large organizations. I have delivered trainings as a university lecturer and trainer, focusing on AI, project management, and digital tools.</p>
+                <p>With 5+ years of experience in web development, I have also worked as a System Administrator, Project Manager, and Graphic Designer, supporting both startups and large organizations.</p>
             </div>
             <div class="glass-card about-card">
                 <i class="fas fa-heart fa-2x"></i>
                 <h3>Passion</h3>
-                <p>I am passionate about creating intuitive, beautiful, and accessible user interfaces. I enjoy using modern technologies to bring innovative designs to life. My goal is to enhance user experiences through thoughtful, user-centered design.</p>
+                <p>I am passionate about creating intuitive, beautiful, and accessible user interfaces. I enjoy using modern technologies to bring innovative designs to life.</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section id="services" class="services-section">
-        <div class="book-cover">
-            <div class="logo">
-                <i class="fas fa-laptop-code"></i>
-            </div>
-            <h1 class="cover-title">Our Services</h1>
-            <p class="cover-subtitle">Three tiers to meet your business needs</p>
-        </div>
-        
-        <div class="services-grid">
-            <!-- Basic Tier -->
-            <div class="service-tier tier-basic">
-                <div class="tier-header">
-                    <div class="tier-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h3 class="tier-title">Basic</h3>
-                    <p class="tier-price">Perfect for small businesses</p>
-                </div>
-                <div class="tier-body">
-                    <ul class="tier-features">
-                        <li><i class="fas fa-check"></i> Responsive Web Design</li>
-                        <li><i class="fas fa-check"></i> Basic SEO Optimization</li>
-                        <li><i class="fas fa-check"></i> 5 Page Website</li>
-                        <li><i class="fas fa-check"></i> Contact Form</li>
-                        <li><i class="fas fa-check"></i> Social Media Integration</li>
-                        <li><i class="fas fa-check"></i> 1 Month Support</li>
-                    </ul>
-                    <a href="#contact" class="tier-cta">Get Started</a>
-                </div>
-            </div>
-            
-            <!-- Advanced Tier -->
-            <div class="service-tier tier-advanced">
-                <div class="tier-header">
-                    <div class="tier-icon">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                    <h3 class="tier-title">Advanced</h3>
-                    <p class="tier-price">For growing businesses</p>
-                </div>
-                <div class="tier-body">
-                    <ul class="tier-features">
-                        <li><i class="fas fa-check"></i> Everything in Basic</li>
-                        <li><i class="fas fa-check"></i> Custom Web Application</li>
-                        <li><i class="fas fa-check"></i> Advanced SEO</li>
-                        <li><i class="fas fa-check"></i> Database Integration</li>
-                        <li><i class="fas fa-check"></i> User Authentication</li>
-                        <li><i class="fas fa-check"></i> 3 Months Support</li>
-                        <li><i class="fas fa-check"></i> Basic Analytics</li>
-                    </ul>
-                    <a href="#contact" class="tier-cta">Get Started</a>
-                </div>
-            </div>
-            
-            <!-- Premium Tier -->
-            <div class="service-tier tier-premium">
-                <div class="tier-header">
-                    <div class="tier-icon">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <h3 class="tier-title">Premium</h3>
-                    <p class="tier-price">For enterprise solutions</p>
-                </div>
-                <div class="tier-body">
-                    <ul class="tier-features">
-                        <li><i class="fas fa-check"></i> Everything in Advanced</li>
-                        <li><i class="fas fa-check"></i> E-commerce Functionality</li>
-                        <li><i class="fas fa-check"></i> Custom API Development</li>
-                        <li><i class="fas fa-check"></i> Advanced Security Features</li>
-                        <li><i class="fas fa-check"></i> Mobile App Development</li>
-                        <li><i class="fas fa-check"></i> 6 Months Support</li>
-                        <li><i class="fas fa-check"></i> Advanced Analytics Dashboard</li>
-                        <li><i class="fas fa-check"></i> Priority Support</li>
-                    </ul>
-                    <a href="#contact" class="tier-cta">Get Started</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" style="background: var(--glass);">
-        <h2 class="section-title">My Projects</h2>
-        <div class="project-grid">
-            <div class="glass-card project-card">
-                <img src="Pro-1.png" alt="Project 1" onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80'">
-                <h3>E-Commerce Platform</h3>
-                <p>A full-featured online store with payment integration and admin dashboard.</p>
-                <div class="tech-tags">
-                    <span>React</span>
-                    <span>Node.js</span>
-                    <span>MongoDB</span>
-                </div>
-                <div class="project-overlay">
-                    <a href="#" class="btn btn-primary">View Project</a>
-                </div>
-            </div>
-            <div class="glass-card project-card">
-                <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Project 2">
-                <h3>Travel App</h3>
-                <p>Travel planning application with itinerary builder and destination recommendations.</p>
-                <div class="tech-tags">
-                    <span>Vue.js</span>
-                    <span>Express</span>
-                    <span>Firebase</span>
-                </div>
-                <div class="project-overlay">
-                    <a href="#" class="btn btn-primary">View Project</a>
-                </div>
-            </div>
-            
-            <div class="glass-card project-card">
-                <img src="pro-3.png" alt="Project 3" onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80'">
-                <h3>Irrecha Festival</h3>
-                <p>I developed a modern React.js website for the Irecha festival, creating a digital hub for this major Oromo cultural celebration.</p>
-                <div class="tech-tags">
-                    <span>React Native</span>
-                    <span>GraphQL</span>
-                    <span>MySQL</span>
-                </div>
-                <div class="project-overlay">
-                    <a href="#" class="btn btn-primary">View Project</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Blog Section -->
-    <section id="blog" class="blog-section">
-        <h2 class="section-title">Latest Blog Posts</h2>
-        <div class="blog-grid">
-            <div class="glass-card blog-card">
-                <img src="blog-1.png" alt="Web Development" class="blog-image" onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80'">
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="far fa-calendar"></i> June 15, 2025</span>
-                        <span><i class="far fa-clock"></i> 5 min read</span>
-                    </div>
-                    <span class="blog-category">Web Development</span>
-                    <h3 class="blog-title">The Future of React in 2024</h3>
-                    <p class="blog-excerpt">Exploring the latest features and trends in React development, including server components, concurrent rendering, and more.</p>
-                    <a href="https://www.shopify.com/ppc/website-builder" class="blog-read-more" target="_blank">Read More <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <div class="glass-card blog-card">
-                <img src="blog-2.png" alt="UI/UX Design" class="blog-image" onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80'">
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="far fa-calendar"></i> May 28, 2024</span>
-                        <span><i class="far fa-clock"></i> 7 min read</span>
-                    </div>
-                    <span class="blog-category">UI/UX Design</span>
-                    <h3 class="blog-title">Glassmorphism Design Trends</h3>
-                    <p class="blog-excerpt">How to implement glassmorphism in your designs effectively, with practical examples and code snippets.</p>
-                    <a href="https://careerfoundry.com/en/blog/ux-design/the-difference-between-ux-and-ui-design-a-laymans-guide/" class="blog-read-more" target="_blank">Read More <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <div class="glass-card blog-card">
-                <img src="blog-3.png" alt="Career" class="blog-image" onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80'">
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="far fa-calendar"></i> April 10, 2024</span>
-                        <span><i class="far fa-clock"></i> 10 min read</span>
-                    </div>
-                    <span class="blog-category">Career</span>
-                    <h3 class="blog-title">Building a Developer Portfolio That Stands Out</h3>
-                    <p class="blog-excerpt">Tips and strategies for creating a portfolio that will impress employers and clients in the competitive tech industry.</p>
-                    <a href="https://www.devportfoliotemplates.com/blog/how-to-build-a-developer-portfolio-that-stands-out" class="blog-read-more" target="_blank">Read More <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 3rem;">
-            <a href="#" class="btn btn-primary">
-                <i class="fas fa-book-open"></i> View All Blog Posts
-            </a>
         </div>
     </section>
 
@@ -1827,7 +1055,7 @@
                         <textarea id="message" rows="5" placeholder="Type your message here" required></textarea>
                     </div>
                     
-                    <button type="submit" class="contact-submit-btn">
+                    <button type="submit" class="contact-submit-btn" id="submit-btn">
                         <i class="fas fa-paper-plane"></i> Send Message
                     </button>
                 </form>
@@ -1861,7 +1089,90 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Database for storing messages
+        let db;
+        const DB_NAME = 'PortfolioMessagesDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'messages';
+
+        // Initialize database
+        function initDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = function(event) {
+                    console.error('Database error:', event.target.error);
+                    reject(event.target.error);
+                };
+                
+                request.onupgradeneeded = function(event) {
+                    db = event.target.result;
+                    
+                    // Create object store for messages if it doesn't exist
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        const objectStore = db.createObjectStore(STORE_NAME, { 
+                            keyPath: 'id', 
+                            autoIncrement: true 
+                        });
+                        
+                        // Create indexes for searching
+                        objectStore.createIndex('name', 'name', { unique: false });
+                        objectStore.createIndex('email', 'email', { unique: false });
+                        objectStore.createIndex('date', 'date', { unique: false });
+                        objectStore.createIndex('subject', 'subject', { unique: false });
+                        objectStore.createIndex('status', 'status', { unique: false });
+                    }
+                };
+                
+                request.onsuccess = function(event) {
+                    db = event.target.result;
+                    console.log('Database initialized successfully');
+                    resolve(db);
+                };
+            });
+        }
+
+        // Save message to database
+        function saveMessage(message) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
+                }
+                
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                
+                const messageData = {
+                    ...message,
+                    date: new Date().toISOString(),
+                    status: 'pending',
+                    read: false
+                };
+                
+                const request = objectStore.add(messageData);
+                
+                request.onsuccess = function() {
+                    console.log('Message saved with ID:', request.result);
+                    resolve(request.result);
+                };
+                
+                request.onerror = function() {
+                    console.error('Error saving message:', request.error);
+                    reject(request.error);
+                };
+            });
+        }
+
+        // Contact form submission
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize database
+            try {
+                await initDatabase();
+            } catch (error) {
+                console.error('Failed to initialize database:', error);
+            }
+
             // Mobile menu toggle
             const menuToggle = document.getElementById('menu-toggle');
             const navMenu = document.getElementById('nav-menu');
@@ -1936,9 +1247,6 @@
                 } else {
                     navbar.classList.remove('scrolled');
                 }
-                
-                // Animate sections on scroll
-                animateSections();
             });
             
             backToTop.addEventListener('click', () => {
@@ -1963,89 +1271,52 @@
                 });
             });
 
-            // Animate sections on scroll
-            function animateSections() {
-                const aboutCards = document.querySelectorAll('.about-card');
-                const projectCards = document.querySelectorAll('.project-card');
-                const blogCards = document.querySelectorAll('.blog-card');
-                
-                aboutCards.forEach(card => {
-                    const cardTop = card.getBoundingClientRect().top;
-                    if (cardTop < window.innerHeight - 100) {
-                        card.classList.add('animated');
-                    }
-                });
-                
-                projectCards.forEach(card => {
-                    const cardTop = card.getBoundingClientRect().top;
-                    if (cardTop < window.innerHeight - 100) {
-                        card.classList.add('animated');
-                    }
-                });
-                
-                blogCards.forEach(card => {
-                    const cardTop = card.getBoundingClientRect().top;
-                    if (cardTop < window.innerHeight - 100) {
-                        card.classList.add('animated');
-                    }
-                });
-            }
-            
-            // Initial animation check
-            animateSections();
-
             // Typewriter effect for roles
             const typewriterElement = document.querySelector('.typewriter');
-            const roles = [
-                "Full Stack Developer | System Administrator | Project Manager",
-                "Web Developer | DevOps Engineer | Team Lead",
-                "Software Engineer | Cloud Specialist | Agile Practitioner"
-            ];
-            
-            let roleIndex = 0;
-            let charIndex = 0;
-            let isDeleting = false;
-            let typingSpeed = 100;
-            
-            function type() {
-                if (!typewriterElement) return;
-                
-                const currentRole = roles[roleIndex];
-                
-                if (isDeleting) {
-                    // Remove characters
-                    typewriterElement.textContent = currentRole.substring(0, charIndex - 1);
-                    charIndex--;
-                    typingSpeed = 50;
-                } else {
-                    // Add characters
-                    typewriterElement.textContent = currentRole.substring(0, charIndex + 1);
-                    charIndex++;
-                    typingSpeed = 100;
-                }
-                
-                // Check if complete
-                if (!isDeleting && charIndex === currentRole.length) {
-                    isDeleting = true;
-                    typingSpeed = 1000; // Pause at end
-                } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    roleIndex = (roleIndex + 1) % roles.length;
-                    typingSpeed = 500; // Pause before starting next
-                }
-                
-                setTimeout(type, typingSpeed);
-            }
-            
-            // Start the typewriter effect
             if (typewriterElement) {
+                const roles = [
+                    "Full Stack Developer | System Administrator | Project Manager",
+                    "Web Developer | DevOps Engineer | Team Lead",
+                    "Software Engineer | Cloud Specialist | Agile Practitioner"
+                ];
+                
+                let roleIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+                let typingSpeed = 100;
+                
+                function type() {
+                    const currentRole = roles[roleIndex];
+                    
+                    if (isDeleting) {
+                        typewriterElement.textContent = currentRole.substring(0, charIndex - 1);
+                        charIndex--;
+                        typingSpeed = 50;
+                    } else {
+                        typewriterElement.textContent = currentRole.substring(0, charIndex + 1);
+                        charIndex++;
+                        typingSpeed = 100;
+                    }
+                    
+                    if (!isDeleting && charIndex === currentRole.length) {
+                        isDeleting = true;
+                        typingSpeed = 1000;
+                    } else if (isDeleting && charIndex === 0) {
+                        isDeleting = false;
+                        roleIndex = (roleIndex + 1) % roles.length;
+                        typingSpeed = 500;
+                    }
+                    
+                    setTimeout(type, typingSpeed);
+                }
+                
                 setTimeout(type, 1000);
             }
 
             // Contact form submission
             const contactForm = document.getElementById('contact-form');
             if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
+                contactForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     
                     // Get form values
@@ -2054,32 +1325,58 @@
                     const subject = document.getElementById('subject').value;
                     const message = document.getElementById('message').value;
                     
+                    // Validate form
+                    if (!name || !email || !subject || !message) {
+                        showNotification('Please fill in all fields', 'error');
+                        return;
+                    }
+                    
                     // Show loading state
-                    const submitBtn = this.querySelector('button');
+                    const submitBtn = document.getElementById('submit-btn');
                     const originalText = submitBtn.innerHTML;
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
                     submitBtn.disabled = true;
                     
-                    // Simulate form submission
-                    setTimeout(() => {
+                    try {
+                        // Save to database
+                        await saveMessage({
+                            name: name,
+                            email: email,
+                            subject: subject,
+                            message: message
+                        });
+                        
                         // Show success message
-                        const notification = document.getElementById('notification');
-                        notification.className = 'contact-notification success';
-                        notification.textContent = 'Your message has been sent successfully! We will get back to you soon.';
-                        notification.style.display = 'block';
+                        showNotification('Your message has been sent successfully! I will get back to you soon.', 'success');
                         
                         // Reset form
                         contactForm.reset();
                         
+                    } catch (error) {
+                        console.error('Error saving message:', error);
+                        showNotification('There was an error sending your message. Please try again.', 'error');
+                    } finally {
+                        // Reset button
                         submitBtn.innerHTML = originalText;
                         submitBtn.disabled = false;
-                        
-                        // Hide notification after 5 seconds
-                        setTimeout(() => {
-                            notification.style.display = 'none';
-                        }, 5000);
-                    }, 1500);
+                    }
                 });
+            }
+
+            // Show notification
+            function showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `contact-notification notification ${type}`;
+                
+                // Hide notification after 5 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.className = 'contact-notification';
+                        notification.style.opacity = '1';
+                    }, 300);
+                }, 5000);
             }
         });
     </script>
