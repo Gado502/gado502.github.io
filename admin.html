@@ -832,7 +832,7 @@
                 window.location.href = 'login.html';
             });
             
-            // Load contacts from IndexedDB
+            // Load contacts
             loadContacts();
             
             // Setup analytics period change
@@ -841,42 +841,37 @@
             });
         }
 
-        // Load contacts from IndexedDB
+        // Load contacts from localStorage (simulated)
         function loadContacts() {
-            // Try to access the IndexedDB from the main page
-            const request = indexedDB.open('CustomerContactDB', 2);
-            
-            request.onerror = function() {
-                document.getElementById('contacts-body').innerHTML = `
-                    <tr>
-                        <td colspan="5" style="text-align: center; padding: 3rem; color: var(--gray);">
-                            <i class="fas fa-exclamation-circle"></i> Unable to load contacts. Database not accessible.
-                        </td>
-                    </tr>
-                `;
-            };
-            
-            request.onsuccess = function(event) {
-                const db = event.target.result;
-                if (!db) {
-                    showNoContacts();
-                    return;
+            // In a real application, this would be an API call
+            // For now, we'll simulate with sample data
+            const sampleContacts = [
+                {
+                    id: 1,
+                    name: "John Doe",
+                    email: "john@example.com",
+                    subject: "General Inquiry",
+                    message: "I would like to inquire about your services.",
+                    date: new Date().toISOString(),
+                    status: "pending"
+                },
+                {
+                    id: 2,
+                    name: "Jane Smith",
+                    email: "jane@example.com",
+                    subject: "Support Request",
+                    message: "I need help with my website.",
+                    date: new Date(Date.now() - 86400000).toISOString(),
+                    status: "replied"
                 }
-                
-                const transaction = db.transaction(['submissions'], 'readonly');
-                const objectStore = transaction.objectStore('submissions');
-                const getAllRequest = objectStore.getAll();
-                
-                getAllRequest.onsuccess = function() {
-                    const contacts = getAllRequest.result;
-                    displayContacts(contacts);
-                    updateStats(contacts);
-                };
-                
-                getAllRequest.onerror = function() {
-                    showNoContacts();
-                };
-            };
+            ];
+            
+            // Try to get real contacts from localStorage
+            const savedContacts = localStorage.getItem('portfolioContacts');
+            const contacts = savedContacts ? JSON.parse(savedContacts) : sampleContacts;
+            
+            displayContacts(contacts);
+            updateStats(contacts);
         }
 
         // Display contacts in table
@@ -898,14 +893,12 @@
             contacts.sort((a, b) => new Date(b.date) - new Date(a.date));
             
             let html = '';
-            contacts.forEach((contact, index) => {
+            contacts.forEach((contact) => {
                 const date = new Date(contact.date);
                 const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 
-                // Check if response exists
-                const hasResponse = contact.responseId || contact.replied;
-                const statusClass = hasResponse ? 'status-replied' : 'status-pending';
-                const statusText = hasResponse ? 'Replied' : 'Pending';
+                const statusClass = contact.status === 'replied' ? 'status-replied' : 'status-pending';
+                const statusText = contact.status === 'replied' ? 'Replied' : 'Pending';
                 
                 html += `
                     <tr data-id="${contact.id}">
@@ -914,13 +907,13 @@
                         <td>${formattedDate}</td>
                         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         <td>
-                            <button class="action-btn" onclick="viewContact('${contact.id}')" title="View">
+                            <button class="action-btn" onclick="viewContact(${contact.id})" title="View">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <button class="action-btn" onclick="markAsReplied('${contact.id}')" title="Mark as Replied">
+                            <button class="action-btn" onclick="markAsReplied(${contact.id})" title="Mark as Replied">
                                 <i class="fas fa-check"></i>
                             </button>
-                            <button class="action-btn delete" onclick="deleteContact('${contact.id}')" title="Delete">
+                            <button class="action-btn delete" onclick="deleteContact(${contact.id})" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
@@ -941,7 +934,7 @@
             }
             
             const total = contacts.length;
-            const replied = contacts.filter(c => c.replied || c.responseId).length;
+            const replied = contacts.filter(c => c.status === 'replied').length;
             const pending = total - replied;
             
             document.getElementById('total-contacts').textContent = total;
@@ -949,112 +942,91 @@
             document.getElementById('replied-contacts').textContent = replied;
         }
 
-        // Show no contacts message
-        function showNoContacts() {
-            document.getElementById('contacts-body').innerHTML = `
-                <tr>
-                    <td colspan="5" style="text-align: center; padding: 3rem; color: var(--gray);">
-                        <i class="fas fa-inbox"></i> No contact messages found.
-                    </td>
-                </tr>
-            `;
-        }
-
         // View contact details
         function viewContact(contactId) {
-            const request = indexedDB.open('CustomerContactDB', 2);
+            const savedContacts = localStorage.getItem('portfolioContacts');
+            const contacts = savedContacts ? JSON.parse(savedContacts) : [];
+            const contact = contacts.find(c => c.id === contactId);
             
-            request.onsuccess = function(event) {
-                const db = event.target.result;
-                const transaction = db.transaction(['submissions'], 'readonly');
-                const objectStore = transaction.objectStore('submissions');
-                const getRequest = objectStore.get(Number(contactId));
+            if (!contact) {
+                alert('Contact not found');
+                return;
+            }
+            
+            const date = new Date(contact.date);
+            const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            
+            let details = `
+                <div style="margin-bottom: 1.5rem;">
+                    <strong>Name:</strong><br>
+                    <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
+                        ${contact.name}
+                    </div>
+                </div>
                 
-                getRequest.onsuccess = function() {
-                    const contact = getRequest.result;
-                    if (!contact) return;
-                    
-                    const date = new Date(contact.date);
-                    const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-                    
-                    let details = `
-                        <div style="margin-bottom: 1.5rem;">
-                            <strong>Name:</strong><br>
-                            <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
-                                ${contact.name}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1.5rem;">
-                            <strong>Email:</strong><br>
-                            <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
-                                ${contact.email}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1.5rem;">
-                            <strong>Subject:</strong><br>
-                            <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
-                                ${contact.subject || 'No subject'}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1.5rem;">
-                            <strong>Message:</strong><br>
-                            <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem; white-space: pre-wrap;">
-                                ${contact.message}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 1.5rem;">
-                            <strong>Date:</strong><br>
-                            <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
-                                ${formattedDate}
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.getElementById('contact-details').innerHTML = details;
-                    document.getElementById('contact-modal').style.display = 'flex';
-                };
-            };
+                <div style="margin-bottom: 1.5rem;">
+                    <strong>Email:</strong><br>
+                    <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
+                        ${contact.email}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <strong>Subject:</strong><br>
+                    <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
+                        ${contact.subject || 'No subject'}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <strong>Message:</strong><br>
+                    <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem; white-space: pre-wrap;">
+                        ${contact.message}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <strong>Date:</strong><br>
+                    <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
+                        ${formattedDate}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <strong>Status:</strong><br>
+                    <div style="background: var(--glass-light); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
+                        ${contact.status === 'replied' ? 'Replied' : 'Pending'}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('contact-details').innerHTML = details;
+            document.getElementById('contact-modal').style.display = 'flex';
         }
 
         // Mark contact as replied
         function markAsReplied(contactId) {
-            const request = indexedDB.open('CustomerContactDB', 2);
+            const savedContacts = localStorage.getItem('portfolioContacts');
+            let contacts = savedContacts ? JSON.parse(savedContacts) : [];
             
-            request.onsuccess = function(event) {
-                const db = event.target.result;
-                const transaction = db.transaction(['submissions'], 'readwrite');
-                const objectStore = transaction.objectStore('submissions');
-                const getRequest = objectStore.get(Number(contactId));
+            const contactIndex = contacts.findIndex(c => c.id === contactId);
+            if (contactIndex !== -1) {
+                contacts[contactIndex].status = 'replied';
+                localStorage.setItem('portfolioContacts', JSON.stringify(contacts));
                 
-                getRequest.onsuccess = function() {
-                    const contact = getRequest.result;
-                    if (!contact) return;
-                    
-                    contact.replied = true;
-                    contact.repliedDate = new Date().toISOString();
-                    
-                    const updateRequest = objectStore.put(contact);
-                    
-                    updateRequest.onsuccess = function() {
-                        // Update UI
-                        const row = document.querySelector(`tr[data-id="${contactId}"]`);
-                        if (row) {
-                            const statusCell = row.cells[3];
-                            statusCell.innerHTML = '<span class="status-badge status-replied">Replied</span>';
-                        }
-                        
-                        // Update stats
-                        loadContacts();
-                        
-                        // Add activity
-                        addActivity('Replied to contact message');
-                    };
-                };
-            };
+                // Update UI
+                const row = document.querySelector(`tr[data-id="${contactId}"]`);
+                if (row) {
+                    const statusCell = row.cells[3];
+                    statusCell.innerHTML = '<span class="status-badge status-replied">Replied</span>';
+                }
+                
+                // Update stats
+                loadContacts();
+                
+                // Add activity
+                addActivity('Replied to contact message');
+            }
         }
 
         // Delete contact
@@ -1063,34 +1035,35 @@
                 return;
             }
             
-            const request = indexedDB.open('CustomerContactDB', 2);
+            const savedContacts = localStorage.getItem('portfolioContacts');
+            let contacts = savedContacts ? JSON.parse(savedContacts) : [];
             
-            request.onsuccess = function(event) {
-                const db = event.target.result;
-                const transaction = db.transaction(['submissions'], 'readwrite');
-                const objectStore = transaction.objectStore('submissions');
-                const deleteRequest = objectStore.delete(Number(contactId));
-                
-                deleteRequest.onsuccess = function() {
-                    // Remove from UI
-                    const row = document.querySelector(`tr[data-id="${contactId}"]`);
-                    if (row) {
-                        row.remove();
-                    }
-                    
-                    // Update stats
-                    loadContacts();
-                    
-                    // Add activity
-                    addActivity('Deleted contact message');
-                    
-                    // Show message if no contacts left
-                    const rows = document.querySelectorAll('#contacts-body tr');
-                    if (rows.length === 0 || (rows.length === 1 && rows[0].cells[0].colSpan === 5)) {
-                        showNoContacts();
-                    }
-                };
-            };
+            contacts = contacts.filter(c => c.id !== contactId);
+            localStorage.setItem('portfolioContacts', JSON.stringify(contacts));
+            
+            // Remove from UI
+            const row = document.querySelector(`tr[data-id="${contactId}"]`);
+            if (row) {
+                row.remove();
+            }
+            
+            // Update stats
+            loadContacts();
+            
+            // Add activity
+            addActivity('Deleted contact message');
+            
+            // Show message if no contacts left
+            const rows = document.querySelectorAll('#contacts-body tr');
+            if (rows.length === 0 || (rows.length === 1 && rows[0].cells[0].colSpan === 5)) {
+                document.getElementById('contacts-body').innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 3rem; color: var(--gray);">
+                            <i class="fas fa-inbox"></i> No contact messages found.
+                        </td>
+                    </tr>
+                `;
+            }
         }
 
         // Add activity to recent activity list
@@ -1158,7 +1131,6 @@
         }
 
         function updateAnalytics(days) {
-            // This would normally fetch analytics data
             console.log(`Updating analytics for last ${days} days`);
         }
 

@@ -427,7 +427,7 @@
                             <input type="checkbox" id="remember">
                             Remember me
                         </label>
-                        <a href="#" class="forgot-password">Forgot Password?</a>
+                        <a href="#" class="forgot-password" id="forgot-password">Forgot Password?</a>
                     </div>
                 </div>
 
@@ -539,23 +539,29 @@
             const savedAuth = localStorage.getItem('adminAuth') || sessionStorage.getItem('adminAuth');
             
             if (savedAuth) {
-                const authData = JSON.parse(savedAuth);
-                const now = Date.now();
-                const oneDay = 24 * 60 * 60 * 1000; // 24 hours
-                
-                // Check if login is still valid (within 24 hours)
-                if (authData.timestamp && (now - authData.timestamp) < oneDay) {
-                    // Auto-redirect if already logged in
-                    window.location.href = 'admin.html';
-                } else {
-                    // Clear expired login
+                try {
+                    const authData = JSON.parse(savedAuth);
+                    const now = Date.now();
+                    const oneDay = 24 * 60 * 60 * 1000; // 24 hours
+                    
+                    // Check if login is still valid (within 24 hours)
+                    if (authData.timestamp && (now - authData.timestamp) < oneDay) {
+                        // Auto-redirect if already logged in
+                        window.location.href = 'admin.html';
+                    } else {
+                        // Clear expired login
+                        localStorage.removeItem('adminAuth');
+                        sessionStorage.removeItem('adminAuth');
+                    }
+                } catch (e) {
+                    // Clear invalid data
                     localStorage.removeItem('adminAuth');
                     sessionStorage.removeItem('adminAuth');
                 }
             }
             
             // Forgot password functionality
-            document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            document.getElementById('forgot-password').addEventListener('click', function(e) {
                 e.preventDefault();
                 const notification = document.getElementById('notification');
                 
