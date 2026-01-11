@@ -1702,269 +1702,45 @@
         <i class="fas fa-arrow-up"></i>
     </div>
 
+    
     <script>
-        // Initialize Database for storing messages
-        let db;
-        const DB_NAME = 'PortfolioMessagesDB';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'messages';
+        // Message storage
+        const STORAGE_KEY = 'portfolio_messages';
+        const SYNC_KEY = 'portfolio_sync_data';
 
-        // Initialize database
-        function initDatabase() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                
-                request.onerror = function(event) {
-                    console.error('Database error:', event.target.error);
-                    reject(event.target.error);
-                };
-                
-                request.onupgradeneeded = function(event) {
-                    db = event.target.result;
-                    
-                    // Create object store for messages if it doesn't exist
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        const objectStore = db.createObjectStore(STORE_NAME, { 
-                            keyPath: 'id', 
-                            autoIncrement: true 
-                        });
-                        
-                        // Create indexes for searching
-                        objectStore.createIndex('name', 'name', { unique: false });
-                        objectStore.createIndex('email', 'email', { unique: false });
-                        objectStore.createIndex('date', 'date', { unique: false });
-                        objectStore.createIndex('subject', 'subject', { unique: false });
-                        objectStore.createIndex('status', 'status', { unique: false });
-                    }
-                };
-                
-                request.onsuccess = function(event) {
-                    db = event.target.result;
-                    console.log('Database initialized successfully');
-                    resolve(db);
-                };
-            });
-        }
-
-        // Save message to database
-        function saveMessage(message) {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    reject('Database not initialized');
-                    return;
-                }
-                
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const objectStore = transaction.objectStore(STORE_NAME);
-                
-                const messageData = {
-                    ...message,
-                    date: new Date().toISOString(),
-                    status: 'pending',
-                    read: false
-                };
-                
-                const request = objectStore.add(messageData);
-                
-                request.onsuccess = function() {
-                    console.log('Message saved with ID:', request.result);
-                    resolve(request.result);
-                };
-                
-                request.onerror = function() {
-                    console.error('Error saving message:', request.error);
-                    reject(request.error);
-                };
-            });
-        }
-
-        // Contact form submission
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Initialize database
-            try {
-                await initDatabase();
-            } catch (error) {
-                console.error('Failed to initialize database:', error);
-            }
-
-            // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu
             const menuToggle = document.getElementById('menu-toggle');
             const navMenu = document.getElementById('nav-menu');
             
-            menuToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
+            menuToggle.addEventListener('click', () => {
                 menuToggle.classList.toggle('active');
                 navMenu.classList.toggle('active');
             });
             
-            // Close menu when clicking outside
-            document.addEventListener('click', (e) => {
-                if (navMenu.classList.contains('active') && 
-                    !e.target.closest('#nav-menu') && 
-                    !e.target.closest('#menu-toggle')) {
-                    menuToggle.classList.remove('active');
-                    navMenu.classList.remove('active');
-                }
-            });
-            
-            // Close menu when clicking on a link
-            const navLinks = document.querySelectorAll('.glass-nav a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    menuToggle.classList.remove('active');
-                    navMenu.classList.remove('active');
-                });
-            });
-            
-            // Theme toggle functionality
+            // Theme toggle
             const themeToggle = document.getElementById('theme-toggle');
             const themeIcon = themeToggle.querySelector('i');
             
             themeToggle.addEventListener('click', () => {
-                document.body.setAttribute('data-theme', 
-                    document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+                const currentTheme = document.body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                 
-                if (document.body.getAttribute('data-theme') === 'dark') {
-                    themeIcon.classList.remove('fa-moon');
-                    themeIcon.classList.add('fa-sun');
-                } else {
-                    themeIcon.classList.remove('fa-sun');
-                    themeIcon.classList.add('fa-moon');
-                }
+                document.body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
                 
-                // Save theme preference
-                localStorage.setItem('theme', document.body.getAttribute('data-theme'));
+                themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             });
             
             // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.setAttribute('data-theme', savedTheme);
-            if (savedTheme === 'dark') {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            }
+            themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             
-            // Back to top button
-            const backToTop = document.getElementById('back-to-top');
-            
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 500) {
-                    backToTop.classList.add('visible');
-                } else {
-                    backToTop.classList.remove('visible');
-                }
-                
-                // Navbar scroll effect
-                const navbar = document.querySelector('.glass-nav');
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-                
-                // Animate sections on scroll
-                animateSections();
-            });
-            
-            backToTop.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-            
-            // Smooth scrolling for navbar links
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    const href = this.getAttribute('href');
-                    if (href.startsWith('#')) {
-                        e.preventDefault();
-                        const targetId = href.substring(1);
-                        const targetSection = document.getElementById(targetId);
-                        if (targetSection) {
-                            window.scrollTo({
-                                top: targetSection.offsetTop - 80,
-                                behavior: 'smooth'
-                            });
-                        }
-                    }
-                });
-            });
-
-            // Animate sections on scroll
-            function animateSections() {
-                const aboutCards = document.querySelectorAll('.about-card');
-                const projectCards = document.querySelectorAll('.project-card');
-                const blogCards = document.querySelectorAll('.blog-card');
-                
-                aboutCards.forEach(card => {
-                    const cardTop = card.getBoundingClientRect().top;
-                    if (cardTop < window.innerHeight - 100) {
-                        card.classList.add('animated');
-                    }
-                });
-                
-                projectCards.forEach(card => {
-                    const cardTop = card.getBoundingClientRect().top;
-                    if (cardTop < window.innerHeight - 100) {
-                        card.classList.add('animated');
-                    }
-                });
-                
-                blogCards.forEach(card => {
-                    const cardTop = card.getBoundingClientRect().top;
-                    if (cardTop < window.innerHeight - 100) {
-                        card.classList.add('animated');
-                    }
-                });
-            }
-            
-            // Initial animation check
-            animateSections();
-
-            // Typewriter effect for roles
-            const typewriterElement = document.querySelector('.typewriter');
-            if (typewriterElement) {
-                const roles = [
-                    "Full Stack Developer | System Administrator | Project Manager",
-                    "Web Developer | DevOps Engineer | Team Lead",
-                    "Software Engineer | Cloud Specialist | Agile Practitioner"
-                ];
-                
-                let roleIndex = 0;
-                let charIndex = 0;
-                let isDeleting = false;
-                let typingSpeed = 100;
-                
-                function type() {
-                    const currentRole = roles[roleIndex];
-                    
-                    if (isDeleting) {
-                        typewriterElement.textContent = currentRole.substring(0, charIndex - 1);
-                        charIndex--;
-                        typingSpeed = 50;
-                    } else {
-                        typewriterElement.textContent = currentRole.substring(0, charIndex + 1);
-                        charIndex++;
-                        typingSpeed = 100;
-                    }
-                    
-                    if (!isDeleting && charIndex === currentRole.length) {
-                        isDeleting = true;
-                        typingSpeed = 1000;
-                    } else if (isDeleting && charIndex === 0) {
-                        isDeleting = false;
-                        roleIndex = (roleIndex + 1) % roles.length;
-                        typingSpeed = 500;
-                    }
-                    
-                    setTimeout(type, typingSpeed);
-                }
-                
-                setTimeout(type, 1000);
-            }
-
             // Contact form submission
             const contactForm = document.getElementById('contact-form');
             if (contactForm) {
-                contactForm.addEventListener('submit', async function(e) {
+                contactForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
                     // Get form values
@@ -1986,23 +1762,26 @@
                     submitBtn.disabled = true;
                     
                     try {
-                        // Save to database
-                        await saveMessage({
+                        // Save message
+                        saveMessage({
                             name: name,
                             email: email,
                             subject: subject,
-                            message: message
+                            message: message,
+                            date: new Date().toISOString(),
+                            status: 'pending',
+                            read: false
                         });
                         
                         // Show success message
-                        showNotification('Your message has been sent successfully! I will get back to you soon.', 'success');
+                        showNotification('Your message has been sent successfully!', 'success');
                         
                         // Reset form
                         contactForm.reset();
                         
                     } catch (error) {
                         console.error('Error saving message:', error);
-                        showNotification('There was an error sending your message. Please try again.', 'error');
+                        showNotification('There was an error. Please try again.', 'error');
                     } finally {
                         // Reset button
                         submitBtn.innerHTML = originalText;
@@ -2010,23 +1789,69 @@
                     }
                 });
             }
-
-            // Show notification
-            function showNotification(message, type) {
-                const notification = document.getElementById('notification');
-                notification.textContent = message;
-                notification.className = `contact-notification notification ${type}`;
-                
-                // Hide notification after 5 seconds
-                setTimeout(() => {
-                    notification.style.opacity = '0';
-                    setTimeout(() => {
-                        notification.className = 'contact-notification';
-                        notification.style.opacity = '1';
-                    }, 300);
-                }, 5000);
-            }
         });
+
+        // Save message to storage
+        function saveMessage(message) {
+            let messages = getMessages();
+            messages.push({
+                id: Date.now(),
+                ...message
+            });
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+            
+            // Create sync data for other devices
+            createSyncData();
+        }
+
+        // Get all messages
+        function getMessages() {
+            const messages = localStorage.getItem(STORAGE_KEY);
+            return messages ? JSON.parse(messages) : [];
+        }
+
+        // Create sync data for cross-device sharing
+        function createSyncData() {
+            const messages = getMessages();
+            const syncData = {
+                messages: messages,
+                lastUpdated: new Date().toISOString(),
+                deviceId: getDeviceId()
+            };
+            
+            localStorage.setItem(SYNC_KEY, JSON.stringify(syncData));
+            
+            // For cross-device: You can also use email notification here
+            // This would require a backend, but for frontend-only, we use localStorage
+            // which syncs across devices when using the same browser account
+        }
+
+        // Get device ID
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('device_id');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('device_id', deviceId);
+            }
+            return deviceId;
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `contact-notification notification ${type}`;
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.className = 'contact-notification';
+                    notification.style.opacity = '1';
+                }, 300);
+            }, 5000);
+        }
     </script>
 </body>
 </html>

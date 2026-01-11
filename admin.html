@@ -760,55 +760,35 @@
     </button>
 
     <script>
-        // Database configuration
-        const DB_NAME = 'PortfolioMessagesDB';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'messages';
-        let db;
+        // Storage configuration
+        const STORAGE_KEY = 'portfolio_messages';
+        let currentMessageId = null;
 
-        // Authentication check
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedAuth = localStorage.getItem('adminAuth') || sessionStorage.getItem('adminAuth');
-            
-            if (!savedAuth) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            try {
-                const authData = JSON.parse(savedAuth);
-                const now = Date.now();
-                const oneDay = 24 * 60 * 60 * 1000;
-                
-                // Check if login is still valid
-                if (!authData.timestamp || (now - authData.timestamp) > oneDay) {
-                    localStorage.removeItem('adminAuth');
-                    sessionStorage.removeItem('adminAuth');
-                    window.location.href = 'login.html';
-                    return;
+        // Check if admin is logged in
+        function checkAdminAuth() {
+            const isLoggedIn = localStorage.getItem('admin_logged_in');
+            if (!isLoggedIn) {
+                // Simple admin login - you can enhance this
+                const password = prompt('Enter admin password:');
+                if (password === 'admin123') { // Change this password
+                    localStorage.setItem('admin_logged_in', 'true');
+                    return true;
+                } else {
+                    alert('Invalid password');
+                    window.location.href = 'index.html';
+                    return false;
                 }
-            } catch (e) {
-                window.location.href = 'login.html';
-                return;
             }
-            
-            // Initialize admin panel
-            initializeAdminPanel();
-        });
+            return true;
+        }
 
         // Initialize admin panel
         function initializeAdminPanel() {
+            if (!checkAdminAuth()) return;
+            
             // Theme toggle
             const themeToggle = document.getElementById('theme-toggle');
             const themeIcon = themeToggle.querySelector('i');
-            
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-            
-            if (savedTheme === 'dark') {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            }
             
             themeToggle.addEventListener('click', () => {
                 const currentTheme = document.body.getAttribute('data-theme');
@@ -817,95 +797,40 @@
                 document.body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('theme', newTheme);
                 
-                if (newTheme === 'dark') {
-                    themeIcon.classList.remove('fa-moon');
-                    themeIcon.classList.add('fa-sun');
-                } else {
-                    themeIcon.classList.remove('fa-sun');
-                    themeIcon.classList.add('fa-moon');
-                }
+                themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             });
             
-            // Logout button
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.removeItem('adminAuth');
-                sessionStorage.removeItem('adminAuth');
-                window.location.href = 'login.html';
-            });
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             
-            // Initialize database and load messages
-            initDatabase();
-        }
-
-        // Initialize database
-        function initDatabase() {
-            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            // Load messages
+            loadMessages();
             
-            request.onerror = function(event) {
-                console.error('Database error:', event.target.error);
-                showError('Failed to initialize database');
-            };
+            // Check for sync data
+            checkSyncData();
             
-            request.onsuccess = function(event) {
-                db = event.target.result;
-                console.log('Database initialized successfully');
+            // Auto-refresh every 30 seconds
+            setInterval(() => {
+                checkSyncData();
                 loadMessages();
-            };
-            
-            request.onupgradeneeded = function(event) {
-                db = event.target.result;
-                
-                // Create object store if it doesn't exist
-                if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    const objectStore = db.createObjectStore(STORE_NAME, { 
-                        keyPath: 'id', 
-                        autoIncrement: true 
-                    });
-                    
-                    // Create indexes
-                    objectStore.createIndex('name', 'name', { unique: false });
-                    objectStore.createIndex('email', 'email', { unique: false });
-                    objectStore.createIndex('date', 'date', { unique: false });
-                    objectStore.createIndex('status', 'status', { unique: false });
-                    objectStore.createIndex('read', 'read', { unique: false });
-                }
-            };
+            }, 30000);
         }
 
-        // Load messages from database
+        // Load messages from storage
         function loadMessages() {
-            if (!db) {
-                showError('Database not available');
-                return;
-            }
+            const messages = getMessages();
             
-            const transaction = db.transaction([STORE_NAME], 'readonly');
-            const objectStore = transaction.objectStore(STORE_NAME);
-            const request = objectStore.getAll();
-            
-            request.onsuccess = function() {
-                const messages = request.result;
-                displayMessages(messages);
-                updateStats(messages);
-            };
-            
-            request.onerror = function() {
-                showError('Failed to load messages');
-            };
-        }
-
-        // Display messages in table
-        function displayMessages(messages) {
-            const messagesBody = document.getElementById('messages-body');
-            
-            if (!messages || messages.length === 0) {
-                messagesBody.innerHTML = `
+            if (messages.length === 0) {
+                document.getElementById('messages-body').innerHTML = `
                     <tr>
                         <td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray);">
                             <i class="fas fa-inbox"></i> No messages yet.
                         </td>
                     </tr>
                 `;
+                updateStats([]);
                 return;
             }
             
@@ -928,11 +853,11 @@
                     statusText = 'Read';
                 } else {
                     statusClass = 'status-pending';
-                    statusText = 'Unread';
+                    statusText = 'Pending';
                 }
                 
                 html += `
-                    <tr data-id="${message.id}" class="${message.read ? '' : 'unread'}">
+                    <tr>
                         <td><strong>${message.name}</strong></td>
                         <td>${message.email}</td>
                         <td>${message.subject || 'No subject'}</td>
@@ -953,19 +878,23 @@
                 `;
             });
             
-            messagesBody.innerHTML = html;
+            document.getElementById('messages-body').innerHTML = html;
+            updateStats(messages);
+        }
+
+        // Get all messages from storage
+        function getMessages() {
+            const messages = localStorage.getItem(STORAGE_KEY);
+            return messages ? JSON.parse(messages) : [];
+        }
+
+        // Save messages to storage
+        function saveMessages(messages) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
         }
 
         // Update statistics
         function updateStats(messages) {
-            if (!messages) {
-                document.getElementById('total-contacts').textContent = '0';
-                document.getElementById('pending-contacts').textContent = '0';
-                document.getElementById('replied-contacts').textContent = '0';
-                document.getElementById('read-contacts').textContent = '0';
-                return;
-            }
-            
             const total = messages.length;
             const replied = messages.filter(m => m.status === 'replied').length;
             const read = messages.filter(m => m.read).length;
@@ -979,42 +908,26 @@
 
         // View message details
         function viewMessage(messageId) {
-            if (!db) return;
+            const messages = getMessages();
+            const message = messages.find(m => m.id == messageId);
             
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const objectStore = transaction.objectStore(STORE_NAME);
-            const getRequest = objectStore.get(Number(messageId));
+            if (!message) return;
             
-            getRequest.onsuccess = function() {
-                const message = getRequest.result;
-                if (!message) return;
-                
-                // Mark as read
-                if (!message.read) {
-                    message.read = true;
-                    message.readDate = new Date().toISOString();
-                    
-                    const updateRequest = objectStore.put(message);
-                    
-                    updateRequest.onsuccess = function() {
-                        displayMessageDetails(message);
-                        addActivity(`Viewed message from ${message.name}`);
-                    };
-                } else {
-                    displayMessageDetails(message);
-                }
-            };
-        }
-
-        // Display message details in modal
-        function displayMessageDetails(message) {
+            currentMessageId = messageId;
+            
+            // Mark as read
+            if (!message.read) {
+                message.read = true;
+                message.readDate = new Date().toISOString();
+                saveMessages(messages);
+                loadMessages();
+            }
+            
             const date = new Date(message.date);
             const formattedDate = date.toLocaleDateString() + ' ' + 
                                  date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             
-            const readDate = message.readDate ? new Date(message.readDate).toLocaleString() : 'Not read yet';
-            
-            let details = `
+            const details = `
                 <div class="message-detail">
                     <strong>From:</strong>
                     <div>${message.name} &lt;${message.email}&gt;</div>
@@ -1032,228 +945,155 @@
                 
                 <div class="message-detail">
                     <strong>Status:</strong>
-                    <div>${message.status === 'replied' ? 'Replied' : (message.read ? 'Read' : 'Unread')}</div>
+                    <div>${message.status === 'replied' ? 'Replied' : (message.read ? 'Read' : 'Pending')}</div>
                 </div>
                 
                 <div class="message-detail">
                     <strong>Message:</strong>
-                    <div class="message-content">${message.message}</div>
+                    <div>${message.message}</div>
                 </div>
             `;
             
             document.getElementById('message-details').innerHTML = details;
             document.getElementById('message-modal').style.display = 'flex';
-            
-            // Update the UI
-            loadMessages();
         }
 
         // Mark message as replied
         function markAsReplied(messageId) {
             if (!confirm('Mark this message as replied?')) return;
             
-            if (!db) return;
+            const messages = getMessages();
+            const message = messages.find(m => m.id == messageId);
             
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const objectStore = transaction.objectStore(STORE_NAME);
-            const getRequest = objectStore.get(Number(messageId));
-            
-            getRequest.onsuccess = function() {
-                const message = getRequest.result;
-                if (!message) return;
-                
+            if (message) {
                 message.status = 'replied';
                 message.repliedDate = new Date().toISOString();
-                
-                const updateRequest = objectStore.put(message);
-                
-                updateRequest.onsuccess = function() {
-                    loadMessages();
-                    addActivity(`Marked message from ${message.name} as replied`);
-                    alert('Message marked as replied');
-                };
-            };
+                saveMessages(messages);
+                loadMessages();
+                alert('Message marked as replied');
+            }
         }
 
         // Delete message
         function deleteMessage(messageId) {
             if (!confirm('Are you sure you want to delete this message?')) return;
             
-            if (!db) return;
-            
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const objectStore = transaction.objectStore(STORE_NAME);
-            const deleteRequest = objectStore.delete(Number(messageId));
-            
-            deleteRequest.onsuccess = function() {
-                loadMessages();
-                addActivity('Deleted a message');
-                alert('Message deleted successfully');
-            };
+            const messages = getMessages();
+            const filteredMessages = messages.filter(m => m.id != messageId);
+            saveMessages(filteredMessages);
+            loadMessages();
+            alert('Message deleted successfully');
         }
 
-        // Mark all messages as read
-        function markAllAsRead() {
-            if (!confirm('Mark all messages as read?')) return;
-            
-            if (!db) return;
-            
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const objectStore = transaction.objectStore(STORE_NAME);
-            const request = objectStore.getAll();
-            
-            request.onsuccess = function() {
-                const messages = request.result;
-                
-                messages.forEach(message => {
-                    if (!message.read) {
-                        message.read = true;
-                        message.readDate = new Date().toISOString();
-                        objectStore.put(message);
-                    }
-                });
-                
-                setTimeout(() => {
+        // Check for sync data from other devices
+        function checkSyncData() {
+            const syncData = localStorage.getItem('portfolio_sync_data');
+            if (syncData) {
+                try {
+                    const data = JSON.parse(syncData);
+                    const currentMessages = getMessages();
+                    
+                    // Merge messages
+                    data.messages.forEach(newMessage => {
+                        const exists = currentMessages.some(m => m.id === newMessage.id);
+                        if (!exists) {
+                            currentMessages.push(newMessage);
+                        }
+                    });
+                    
+                    saveMessages(currentMessages);
                     loadMessages();
-                    addActivity('Marked all messages as read');
-                    alert('All messages marked as read');
-                }, 500);
-            };
-        }
-
-        // Delete all messages
-        function deleteAllMessages() {
-            if (!confirm('Are you sure you want to delete ALL messages? This action cannot be undone.')) return;
-            
-            if (!db) return;
-            
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const objectStore = transaction.objectStore(STORE_NAME);
-            const clearRequest = objectStore.clear();
-            
-            clearRequest.onsuccess = function() {
-                loadMessages();
-                addActivity('Deleted all messages');
-                alert('All messages deleted successfully');
-            };
+                    
+                } catch (error) {
+                    console.error('Error syncing data:', error);
+                }
+            }
         }
 
         // Export messages
         function exportMessages() {
-            if (!db) return;
+            const messages = getMessages();
             
-            const transaction = db.transaction([STORE_NAME], 'readonly');
-            const objectStore = transaction.objectStore(STORE_NAME);
-            const request = objectStore.getAll();
+            if (messages.length === 0) {
+                alert('No messages to export');
+                return;
+            }
             
-            request.onsuccess = function() {
-                const messages = request.result;
-                
-                if (messages.length === 0) {
-                    alert('No messages to export');
-                    return;
-                }
-                
-                // Convert to CSV
-                const headers = ['Name', 'Email', 'Subject', 'Message', 'Date', 'Status', 'Read'];
-                const csvData = messages.map(msg => [
-                    `"${msg.name}"`,
-                    `"${msg.email}"`,
-                    `"${msg.subject || ''}"`,
-                    `"${msg.message.replace(/"/g, '""')}"`,
-                    `"${new Date(msg.date).toLocaleString()}"`,
-                    `"${msg.status || 'pending'}"`,
-                    `"${msg.read ? 'Yes' : 'No'}"`
-                ].join(','));
-                
-                const csv = [headers.join(','), ...csvData].join('\n');
-                
-                // Create download link
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `messages_${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                addActivity('Exported messages to CSV');
-            };
+            // Convert to CSV
+            const headers = ['Name', 'Email', 'Subject', 'Message', 'Date', 'Status'];
+            const csvData = messages.map(msg => [
+                `"${msg.name}"`,
+                `"${msg.email}"`,
+                `"${msg.subject || ''}"`,
+                `"${msg.message.replace(/"/g, '""')}"`,
+                `"${new Date(msg.date).toLocaleString()}"`,
+                `"${msg.status || 'pending'}"`
+            ].join(','));
+            
+            const csv = [headers.join(','), ...csvData].join('\n');
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `messages_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('Messages exported successfully');
         }
 
         // Modal functions
         function closeModal() {
             document.getElementById('message-modal').style.display = 'none';
+            currentMessageId = null;
         }
 
         function replyToMessage() {
-            const email = document.querySelector('#message-details .message-detail:nth-child(1) div')?.textContent;
-            const match = email.match(/<(.+?)>/);
-            if (match && match[1]) {
-                window.open(`mailto:${match[1]}`, '_blank');
+            if (!currentMessageId) return;
+            
+            const messages = getMessages();
+            const message = messages.find(m => m.id == currentMessageId);
+            
+            if (message) {
+                window.open(`mailto:${message.email}?subject=Re: ${message.subject}`, '_blank');
             }
-            closeModal();
         }
 
         function markAsRead() {
-            // Already marked as read when viewing
+            if (!currentMessageId) return;
+            
+            const messages = getMessages();
+            const message = messages.find(m => m.id == currentMessageId);
+            
+            if (message && !message.read) {
+                message.read = true;
+                message.readDate = new Date().toISOString();
+                saveMessages(messages);
+                loadMessages();
+            }
+            
             closeModal();
         }
 
         // Refresh messages
         function refreshMessages() {
+            checkSyncData();
             loadMessages();
-            addActivity('Refreshed messages list');
+            alert('Messages refreshed');
         }
 
-        // Add activity to recent activity list
-        function addActivity(text) {
-            const activityList = document.getElementById('activity-list');
-            const now = new Date();
-            const timeAgo = 'just now';
-            
-            const activityItem = document.createElement('div');
-            activityItem.className = 'activity-item';
-            activityItem.innerHTML = `
-                <div class="activity-icon">
-                    <i class="fas fa-bell"></i>
-                </div>
-                <div class="activity-content">
-                    <p>${text}</p>
-                    <div class="activity-time">${timeAgo}</div>
-                </div>
-            `;
-            
-            // Add to top
-            activityList.insertBefore(activityItem, activityList.firstChild);
-            
-            // Limit to 10 activities
-            if (activityList.children.length > 10) {
-                activityList.removeChild(activityList.lastChild);
-            }
+        // Logout
+        function logout() {
+            localStorage.removeItem('admin_logged_in');
+            window.location.href = 'index.html';
         }
 
-        // Show error message
-        function showError(message) {
-            const messagesBody = document.getElementById('messages-body');
-            messagesBody.innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 3rem; color: #F44336;">
-                        <i class="fas fa-exclamation-circle"></i> ${message}
-                    </td>
-                </tr>
-            `;
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('message-modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        };
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initializeAdminPanel);
     </script>
 </body>
 </html>
