@@ -6,13 +6,6 @@
     <title>Gadissa Dagne | Full Stack Developer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-       <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- Add this line in the HEAD section -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>
-    // Initialize EmailJS with your Public Key
-    emailjs.init('YOUR_PUBLIC_KEY_HERE'); // Get from https://www.emailjs.com/
-</script>
     <style>
         :root {
             --primary: #6c63ff;
@@ -1645,125 +1638,52 @@
                 </div>
             </div>
             
-           <div class="contact-form-container">
-    <h2>Send Us a Message</h2>
-    
-    <!-- Change form method to open email client -->
-    <form id="contact-form" onsubmit="return sendEmail()">
-        <div class="form-group">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" placeholder="Enter your name" required>
+            <div class="contact-form-container">
+                <h2>Send Us a Message</h2>
+                
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" required>
+                            <option value="">Select a subject</option>
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Support">Support Request</option>
+                            <option value="Feedback">Feedback</option>
+                            <option value="Complaint">Complaint</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" rows="5" placeholder="Type your message here" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="contact-submit-btn" id="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+                
+                <div id="notification" class="contact-notification"></div>
+            </div>
         </div>
         
-        <div class="form-group">
-            <label for="email">Your Email</label>
-            <input type="email" id="email" placeholder="Enter your email" required>
+        <div class="social-links">
+            <a href="https://x.com/Gadissa463700?s=09" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://web.facebook.com/nimona12" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.youtube.com/@nuyiiwaliif9025" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
         </div>
-        
-        <div class="form-group">
-            <label for="subject">Subject</label>
-            <select id="subject" required>
-                <option value="">Select a subject</option>
-                <option value="General Inquiry">General Inquiry</option>
-                <option value="Support">Support Request</option>
-                <option value="Feedback">Feedback</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="message">Your Message</label>
-            <textarea id="message" rows="5" placeholder="Type your message here" required></textarea>
-        </div>
-        
-        <button type="submit" class="contact-submit-btn" id="submit-btn">
-            <i class="fas fa-paper-plane"></i> Send Message
-        </button>
-    </form>
-    
-    <div id="notification" class="contact-notification"></div>
-</div>
-
-<script>
-// Add this function to your existing JavaScript
-function sendEmail() {
-    // Get form values
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
-    
-    // Validate form
-    if (!name || !email || !subject || !message) {
-        showNotification('Please fill in all fields', 'error');
-        return false;
-    }
-    
-    // Create email body
-    const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0ASubject: ${subject}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
-    
-    // Open default email client
-    window.location.href = `mailto:gadisadagne@gmail.com?subject=Contact Form: ${encodeURIComponent(subject)}&body=${body}`;
-    
-    // Show success message
-    showNotification('Your email client will open to send the message.', 'success');
-    
-    // Reset form after a delay
-    setTimeout(() => {
-        document.getElementById('contact-form').reset();
-    }, 2000);
-    
-    return false; // Prevent form submission
-}
-
-// Use this if you want to save locally too
-function sendEmailWithLocalSave() {
-    // Get form values
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
-    
-    // Validate form
-    if (!name || !email || !subject || !message) {
-        showNotification('Please fill in all fields', 'error');
-        return false;
-    }
-    
-    // Save to local storage (for this device)
-    const messageData = {
-        id: Date.now(),
-        name: name,
-        email: email,
-        subject: subject,
-        message: message,
-        date: new Date().toISOString(),
-        status: 'pending',
-        read: false
-    };
-    
-    // Save to localStorage
-    let messages = JSON.parse(localStorage.getItem('local_messages') || '[]');
-    messages.push(messageData);
-    localStorage.setItem('local_messages', JSON.stringify(messages));
-    
-    // Create email body
-    const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0ASubject: ${subject}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
-    
-    // Open default email client
-    window.location.href = `mailto:gadisadagne@gmail.com?subject=Contact Form: ${encodeURIComponent(subject)}&body=${body}`;
-    
-    // Show success message
-    showNotification('Message saved locally and email client opened!', 'success');
-    
-    // Reset form after a delay
-    setTimeout(() => {
-        document.getElementById('contact-form').reset();
-    }, 2000);
-    
-    return false; // Prevent form submission
-}
-</script>
     </section>
 
     <!-- Footer -->
@@ -1782,386 +1702,331 @@ function sendEmailWithLocalSave() {
         <i class="fas fa-arrow-up"></i>
     </div>
 
-<script>
-    // Initialize Database for storing messages locally
-    let db;
-    const DB_NAME = 'PortfolioMessagesDB';
-    const DB_VERSION = 1;
-    const STORE_NAME = 'messages';
+    <script>
+        // Initialize Database for storing messages
+        let db;
+        const DB_NAME = 'PortfolioMessagesDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'messages';
 
-    // Initialize database
-    function initDatabase() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(DB_NAME, DB_VERSION);
-            
-            request.onerror = function(event) {
-                console.error('Database error:', event.target.error);
-                reject(event.target.error);
-            };
-            
-            request.onupgradeneeded = function(event) {
-                db = event.target.result;
-                
-                // Create object store for messages if it doesn't exist
-                if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    const objectStore = db.createObjectStore(STORE_NAME, { 
-                        keyPath: 'id', 
-                        autoIncrement: true 
-                    });
-                    
-                    // Create indexes for searching
-                    objectStore.createIndex('name', 'name', { unique: false });
-                    objectStore.createIndex('email', 'email', { unique: false });
-                    objectStore.createIndex('date', 'date', { unique: false });
-                    objectStore.createIndex('subject', 'subject', { unique: false });
-                    objectStore.createIndex('status', 'status', { unique: false });
-                }
-            };
-            
-            request.onsuccess = function(event) {
-                db = event.target.result;
-                console.log('Database initialized successfully');
-                resolve(db);
-            };
-        });
-    }
-
-    // Save message to database
-    function saveMessage(message) {
-        return new Promise((resolve, reject) => {
-            if (!db) {
-                reject('Database not initialized');
-                return;
-            }
-            
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const objectStore = transaction.objectStore(STORE_NAME);
-            
-            const messageData = {
-                ...message,
-                id: Date.now() + Math.random().toString(36).substr(2, 9), // Unique ID
-                date: new Date().toISOString(),
-                status: 'pending',
-                read: false
-            };
-            
-            const request = objectStore.add(messageData);
-            
-            request.onsuccess = function() {
-                console.log('Message saved with ID:', request.result);
-                
-                // ALSO SEND EMAIL NOTIFICATION TO ADMIN
-                sendEmailNotification(messageData);
-                
-                resolve(request.result);
-            };
-            
-            request.onerror = function() {
-                console.error('Error saving message:', request.error);
-                reject(request.error);
-            };
-        });
-    }
-
-    // Send email notification to admin (works across all devices)
-    function sendEmailNotification(message) {
-        // Using EmailJS (free service) to send email
-        // You need to sign up at https://www.emailjs.com/
-        // Replace with your EmailJS credentials
-        
-        const emailData = {
-            to_name: "Admin",
-            from_name: message.name,
-            from_email: message.email,
-            subject: message.subject || "New Contact Form Message",
-            message: message.message,
-            date: new Date(message.date).toLocaleString(),
-            reply_to: message.email
-        };
-        
-        // Method 1: Use EmailJS (Recommended)
-        if (typeof emailjs !== 'undefined') {
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', emailData)
-                .then(function(response) {
-                    console.log('Email sent successfully:', response.status, response.text);
-                }, function(error) {
-                    console.error('Email sending failed:', error);
-                    // Fallback to mailto link
-                    sendMailToLink(message);
-                });
-        } else {
-            // Fallback: Open default email client
-            sendMailToLink(message);
-        }
-    }
-    
-    // Fallback email method
-    function sendMailToLink(message) {
-        const subject = encodeURIComponent(message.subject || "New Contact Form Message");
-        const body = encodeURIComponent(
-            `Name: ${message.name}\nEmail: ${message.email}\nDate: ${new Date().toLocaleString()}\n\nMessage:\n${message.message}`
-        );
-        
-        // This will open the user's default email client
-        window.open(`mailto:gadisadagne@gmail.com?subject=${subject}&body=${body}`, '_blank');
-    }
-
-    // Contact form submission
-    document.addEventListener('DOMContentLoaded', async function() {
         // Initialize database
-        try {
-            await initDatabase();
-        } catch (error) {
-            console.error('Failed to initialize database:', error);
-        }
-
-        // Mobile menu toggle
-        const menuToggle = document.getElementById('menu-toggle');
-        const navMenu = document.getElementById('nav-menu');
-        
-        menuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuToggle.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (navMenu.classList.contains('active') && 
-                !e.target.closest('#nav-menu') && 
-                !e.target.closest('#menu-toggle')) {
-                menuToggle.classList.remove('active');
-                navMenu.classList.remove('active');
-            }
-        });
-        
-        // Close menu when clicking on a link
-        const navLinks = document.querySelectorAll('.glass-nav a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-        
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
-        themeToggle.addEventListener('click', () => {
-            document.body.setAttribute('data-theme', 
-                document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-            
-            if (document.body.getAttribute('data-theme') === 'dark') {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-            
-            // Save theme preference
-            localStorage.setItem('theme', document.body.getAttribute('data-theme'));
-        });
-        
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.body.setAttribute('data-theme', savedTheme);
-        if (savedTheme === 'dark') {
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-        }
-        
-        // Back to top button
-        const backToTop = document.getElementById('back-to-top');
-        
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 500) {
-                backToTop.classList.add('visible');
-            } else {
-                backToTop.classList.remove('visible');
-            }
-            
-            // Navbar scroll effect
-            const navbar = document.querySelector('.glass-nav');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-            
-            // Animate sections on scroll
-            animateSections();
-        });
-        
-        backToTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        
-        // Smooth scrolling for navbar links
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href.startsWith('#')) {
-                    e.preventDefault();
-                    const targetId = href.substring(1);
-                    const targetSection = document.getElementById(targetId);
-                    if (targetSection) {
-                        window.scrollTo({
-                            top: targetSection.offsetTop - 80,
-                            behavior: 'smooth'
+        function initDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = function(event) {
+                    console.error('Database error:', event.target.error);
+                    reject(event.target.error);
+                };
+                
+                request.onupgradeneeded = function(event) {
+                    db = event.target.result;
+                    
+                    // Create object store for messages if it doesn't exist
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        const objectStore = db.createObjectStore(STORE_NAME, { 
+                            keyPath: 'id', 
+                            autoIncrement: true 
                         });
+                        
+                        // Create indexes for searching
+                        objectStore.createIndex('name', 'name', { unique: false });
+                        objectStore.createIndex('email', 'email', { unique: false });
+                        objectStore.createIndex('date', 'date', { unique: false });
+                        objectStore.createIndex('subject', 'subject', { unique: false });
+                        objectStore.createIndex('status', 'status', { unique: false });
                     }
-                }
-            });
-        });
-
-        // Animate sections on scroll
-        function animateSections() {
-            const aboutCards = document.querySelectorAll('.about-card');
-            const projectCards = document.querySelectorAll('.project-card');
-            const blogCards = document.querySelectorAll('.blog-card');
-            
-            aboutCards.forEach(card => {
-                const cardTop = card.getBoundingClientRect().top;
-                if (cardTop < window.innerHeight - 100) {
-                    card.classList.add('animated');
-                }
-            });
-            
-            projectCards.forEach(card => {
-                const cardTop = card.getBoundingClientRect().top;
-                if (cardTop < window.innerHeight - 100) {
-                    card.classList.add('animated');
-                }
-            });
-            
-            blogCards.forEach(card => {
-                const cardTop = card.getBoundingClientRect().top;
-                if (cardTop < window.innerHeight - 100) {
-                    card.classList.add('animated');
-                }
+                };
+                
+                request.onsuccess = function(event) {
+                    db = event.target.result;
+                    console.log('Database initialized successfully');
+                    resolve(db);
+                };
             });
         }
-        
-        // Initial animation check
-        animateSections();
 
-        // Typewriter effect for roles
-        const typewriterElement = document.querySelector('.typewriter');
-        if (typewriterElement) {
-            const roles = [
-                "Full Stack Developer | System Administrator | Project Manager",
-                "Web Developer | DevOps Engineer | Team Lead",
-                "Software Engineer | Cloud Specialist | Agile Practitioner"
-            ];
-            
-            let roleIndex = 0;
-            let charIndex = 0;
-            let isDeleting = false;
-            let typingSpeed = 100;
-            
-            function type() {
-                const currentRole = roles[roleIndex];
-                
-                if (isDeleting) {
-                    typewriterElement.textContent = currentRole.substring(0, charIndex - 1);
-                    charIndex--;
-                    typingSpeed = 50;
-                } else {
-                    typewriterElement.textContent = currentRole.substring(0, charIndex + 1);
-                    charIndex++;
-                    typingSpeed = 100;
+        // Save message to database
+        function saveMessage(message) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
                 }
                 
-                if (!isDeleting && charIndex === currentRole.length) {
-                    isDeleting = true;
-                    typingSpeed = 1000;
-                } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    roleIndex = (roleIndex + 1) % roles.length;
-                    typingSpeed = 500;
-                }
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const objectStore = transaction.objectStore(STORE_NAME);
                 
-                setTimeout(type, typingSpeed);
-            }
-            
-            setTimeout(type, 1000);
+                const messageData = {
+                    ...message,
+                    date: new Date().toISOString(),
+                    status: 'pending',
+                    read: false
+                };
+                
+                const request = objectStore.add(messageData);
+                
+                request.onsuccess = function() {
+                    console.log('Message saved with ID:', request.result);
+                    resolve(request.result);
+                };
+                
+                request.onerror = function() {
+                    console.error('Error saving message:', request.error);
+                    reject(request.error);
+                };
+            });
         }
 
         // Contact form submission
-        const contactForm = document.getElementById('contact-form');
-        if (contactForm) {
-            contactForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                // Get form values
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const subject = document.getElementById('subject').value;
-                const message = document.getElementById('message').value;
-                
-                // Validate form
-                if (!name || !email || !subject || !message) {
-                    showNotification('Please fill in all fields', 'error');
-                    return;
-                }
-                
-                // Validate email format
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    showNotification('Please enter a valid email address', 'error');
-                    return;
-                }
-                
-                // Show loading state
-                const submitBtn = document.getElementById('submit-btn');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-                submitBtn.disabled = true;
-                
-                try {
-                    // Save to database
-                    await saveMessage({
-                        name: name,
-                        email: email,
-                        subject: subject,
-                        message: message
-                    });
-                    
-                    // Show success message
-                    showNotification('Your message has been sent successfully! I will get back to you soon.', 'success');
-                    
-                    // Reset form
-                    contactForm.reset();
-                    
-                } catch (error) {
-                    console.error('Error saving message:', error);
-                    showNotification('There was an error sending your message. Please try again.', 'error');
-                } finally {
-                    // Reset button
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize database
+            try {
+                await initDatabase();
+            } catch (error) {
+                console.error('Failed to initialize database:', error);
+            }
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const navMenu = document.getElementById('nav-menu');
+            
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menuToggle.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (navMenu.classList.contains('active') && 
+                    !e.target.closest('#nav-menu') && 
+                    !e.target.closest('#menu-toggle')) {
+                    menuToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
                 }
             });
-        }
-
-        // Show notification
-        function showNotification(message, type) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `contact-notification notification ${type}`;
             
-            // Hide notification after 5 seconds
-            setTimeout(() => {
-                notification.style.opacity = '0';
+            // Close menu when clicking on a link
+            const navLinks = document.querySelectorAll('.glass-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+            
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            themeToggle.addEventListener('click', () => {
+                document.body.setAttribute('data-theme', 
+                    document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+                
+                if (document.body.getAttribute('data-theme') === 'dark') {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+                
+                // Save theme preference
+                localStorage.setItem('theme', document.body.getAttribute('data-theme'));
+            });
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+            
+            // Back to top button
+            const backToTop = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+                
+                // Navbar scroll effect
+                const navbar = document.querySelector('.glass-nav');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                // Animate sections on scroll
+                animateSections();
+            });
+            
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // Smooth scrolling for navbar links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = href.substring(1);
+                        const targetSection = document.getElementById(targetId);
+                        if (targetSection) {
+                            window.scrollTo({
+                                top: targetSection.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Animate sections on scroll
+            function animateSections() {
+                const aboutCards = document.querySelectorAll('.about-card');
+                const projectCards = document.querySelectorAll('.project-card');
+                const blogCards = document.querySelectorAll('.blog-card');
+                
+                aboutCards.forEach(card => {
+                    const cardTop = card.getBoundingClientRect().top;
+                    if (cardTop < window.innerHeight - 100) {
+                        card.classList.add('animated');
+                    }
+                });
+                
+                projectCards.forEach(card => {
+                    const cardTop = card.getBoundingClientRect().top;
+                    if (cardTop < window.innerHeight - 100) {
+                        card.classList.add('animated');
+                    }
+                });
+                
+                blogCards.forEach(card => {
+                    const cardTop = card.getBoundingClientRect().top;
+                    if (cardTop < window.innerHeight - 100) {
+                        card.classList.add('animated');
+                    }
+                });
+            }
+            
+            // Initial animation check
+            animateSections();
+
+            // Typewriter effect for roles
+            const typewriterElement = document.querySelector('.typewriter');
+            if (typewriterElement) {
+                const roles = [
+                    "Full Stack Developer | System Administrator | Project Manager",
+                    "Web Developer | DevOps Engineer | Team Lead",
+                    "Software Engineer | Cloud Specialist | Agile Practitioner"
+                ];
+                
+                let roleIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+                let typingSpeed = 100;
+                
+                function type() {
+                    const currentRole = roles[roleIndex];
+                    
+                    if (isDeleting) {
+                        typewriterElement.textContent = currentRole.substring(0, charIndex - 1);
+                        charIndex--;
+                        typingSpeed = 50;
+                    } else {
+                        typewriterElement.textContent = currentRole.substring(0, charIndex + 1);
+                        charIndex++;
+                        typingSpeed = 100;
+                    }
+                    
+                    if (!isDeleting && charIndex === currentRole.length) {
+                        isDeleting = true;
+                        typingSpeed = 1000;
+                    } else if (isDeleting && charIndex === 0) {
+                        isDeleting = false;
+                        roleIndex = (roleIndex + 1) % roles.length;
+                        typingSpeed = 500;
+                    }
+                    
+                    setTimeout(type, typingSpeed);
+                }
+                
+                setTimeout(type, 1000);
+            }
+
+            // Contact form submission
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Get form values
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const subject = document.getElementById('subject').value;
+                    const message = document.getElementById('message').value;
+                    
+                    // Validate form
+                    if (!name || !email || !subject || !message) {
+                        showNotification('Please fill in all fields', 'error');
+                        return;
+                    }
+                    
+                    // Show loading state
+                    const submitBtn = document.getElementById('submit-btn');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        // Save to database
+                        await saveMessage({
+                            name: name,
+                            email: email,
+                            subject: subject,
+                            message: message
+                        });
+                        
+                        // Show success message
+                        showNotification('Your message has been sent successfully! I will get back to you soon.', 'success');
+                        
+                        // Reset form
+                        contactForm.reset();
+                        
+                    } catch (error) {
+                        console.error('Error saving message:', error);
+                        showNotification('There was an error sending your message. Please try again.', 'error');
+                    } finally {
+                        // Reset button
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+
+            // Show notification
+            function showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `contact-notification notification ${type}`;
+                
+                // Hide notification after 5 seconds
                 setTimeout(() => {
-                    notification.className = 'contact-notification';
-                    notification.style.opacity = '1';
-                }, 300);
-            }, 5000);
-        }
-    });
-</script>
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.className = 'contact-notification';
+                        notification.style.opacity = '1';
+                    }, 300);
+                }, 5000);
+            }
+        });
+    </script>
 </body>
 </html>
