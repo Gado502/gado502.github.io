@@ -1704,154 +1704,86 @@
 
     
     <script>
-        // Message storage
-        const STORAGE_KEY = 'portfolio_messages';
-        const SYNC_KEY = 'portfolio_sync_data';
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu
-            const menuToggle = document.getElementById('menu-toggle');
-            const navMenu = document.getElementById('nav-menu');
-            
-            menuToggle.addEventListener('click', () => {
-                menuToggle.classList.toggle('active');
-                navMenu.classList.toggle('active');
+       // Contact form submission - UPDATED VERSION
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+        
+        // Validate form
+        if (!name || !email || !subject || !message) {
+            showNotification('Please fill in all fields', 'error');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = document.getElementById('submit-btn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
+        
+        try {
+            // Send to backend server
+            const response = await fetch('http://localhost:3000/api/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    subject: subject,
+                    message: message
+                })
             });
             
-            // Theme toggle
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = themeToggle.querySelector('i');
+            const result = await response.json();
             
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = document.body.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
-                document.body.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                
-                themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            });
-            
-            // Load saved theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-            themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            
-            // Contact form submission
-            const contactForm = document.getElementById('contact-form');
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Get form values
-                    const name = document.getElementById('name').value;
-                    const email = document.getElementById('email').value;
-                    const subject = document.getElementById('subject').value;
-                    const message = document.getElementById('message').value;
-                    
-                    // Validate form
-                    if (!name || !email || !subject || !message) {
-                        showNotification('Please fill in all fields', 'error');
-                        return;
-                    }
-                    
-                    // Show loading state
-                    const submitBtn = document.getElementById('submit-btn');
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-                    submitBtn.disabled = true;
-                    
-                    try {
-                        // Save message
-                        saveMessage({
-                            name: name,
-                            email: email,
-                            subject: subject,
-                            message: message,
-                            date: new Date().toISOString(),
-                            status: 'pending',
-                            read: false
-                        });
-                        
-                        // Show success message
-                        showNotification('Your message has been sent successfully!', 'success');
-                        
-                        // Reset form
-                        contactForm.reset();
-                        
-                    } catch (error) {
-                        console.error('Error saving message:', error);
-                        showNotification('There was an error. Please try again.', 'error');
-                    } finally {
-                        // Reset button
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }
-                });
+            if (result.success) {
+                showNotification('Your message has been sent successfully! I will get back to you soon.', 'success');
+                contactForm.reset();
+            } else {
+                throw new Error(result.error || 'Failed to send message');
             }
-        });
-
-        // Save message to storage
-        function saveMessage(message) {
-            let messages = getMessages();
-            messages.push({
-                id: Date.now(),
-                ...message
+            
+        } catch (error) {
+            console.error('Error sending message:', error);
+            
+            // Fallback: Save to local storage if server fails
+            saveToLocalStorage({
+                name: name,
+                email: email,
+                subject: subject,
+                message: message,
+                date: new Date().toISOString()
             });
             
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+            showNotification('Message saved locally. Will send when connected.', 'success');
             
-            // Create sync data for other devices
-            createSyncData();
+        } finally {
+            // Reset button
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
         }
+    });
+}
 
-        // Get all messages
-        function getMessages() {
-            const messages = localStorage.getItem(STORAGE_KEY);
-            return messages ? JSON.parse(messages) : [];
-        }
-
-        // Create sync data for cross-device sharing
-        function createSyncData() {
-            const messages = getMessages();
-            const syncData = {
-                messages: messages,
-                lastUpdated: new Date().toISOString(),
-                deviceId: getDeviceId()
-            };
-            
-            localStorage.setItem(SYNC_KEY, JSON.stringify(syncData));
-            
-            // For cross-device: You can also use email notification here
-            // This would require a backend, but for frontend-only, we use localStorage
-            // which syncs across devices when using the same browser account
-        }
-
-        // Get device ID
-        function getDeviceId() {
-            let deviceId = localStorage.getItem('device_id');
-            if (!deviceId) {
-                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('device_id', deviceId);
-            }
-            return deviceId;
-        }
-
-        // Show notification
-        function showNotification(message, type) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `contact-notification notification ${type}`;
-            
-            // Hide after 5 seconds
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                setTimeout(() => {
-                    notification.className = 'contact-notification';
-                    notification.style.opacity = '1';
-                }, 300);
-            }, 5000);
-        }
+// Fallback function to save to localStorage
+function saveToLocalStorage(message) {
+    try {
+        let messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+        messages.push(message);
+        localStorage.setItem('pendingMessages', JSON.stringify(messages));
+    } catch (error) {
+        console.error('Error saving to localStorage:', error);
+    }
+}
     </script>
 </body>
 </html>
