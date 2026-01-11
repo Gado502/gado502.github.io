@@ -1702,91 +1702,15 @@
         <i class="fas fa-arrow-up"></i>
     </div>
 
-    <script>
-        // Initialize Database for storing messages
-        let db;
-        const DB_NAME = 'PortfolioMessagesDB';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'messages';
-
-        // Initialize database
-        function initDatabase() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                
-                request.onerror = function(event) {
-                    console.error('Database error:', event.target.error);
-                    reject(event.target.error);
-                };
-                
-                request.onupgradeneeded = function(event) {
-                    db = event.target.result;
-                    
-                    // Create object store for messages if it doesn't exist
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        const objectStore = db.createObjectStore(STORE_NAME, { 
-                            keyPath: 'id', 
-                            autoIncrement: true 
-                        });
-                        
-                        // Create indexes for searching
-                        objectStore.createIndex('name', 'name', { unique: false });
-                        objectStore.createIndex('email', 'email', { unique: false });
-                        objectStore.createIndex('date', 'date', { unique: false });
-                        objectStore.createIndex('subject', 'subject', { unique: false });
-                        objectStore.createIndex('status', 'status', { unique: false });
-                    }
-                };
-                
-                request.onsuccess = function(event) {
-                    db = event.target.result;
-                    console.log('Database initialized successfully');
-                    resolve(db);
-                };
-            });
-        }
-
-        // Save message to database
-        function saveMessage(message) {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    reject('Database not initialized');
-                    return;
-                }
-                
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const objectStore = transaction.objectStore(STORE_NAME);
-                
-                const messageData = {
-                    ...message,
-                    date: new Date().toISOString(),
-                    status: 'pending',
-                    read: false
-                };
-                
-                const request = objectStore.add(messageData);
-                
-                request.onsuccess = function() {
-                    console.log('Message saved with ID:', request.result);
-                    resolve(request.result);
-                };
-                
-                request.onerror = function() {
-                    console.error('Error saving message:', request.error);
-                    reject(request.error);
-                };
-            });
-        }
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+        // Initialize Supabase client
+        const supabaseUrl = 'YOUR_SUPABASE_URL'; // Replace with your Supabase URL
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your Supabase anon key
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         // Contact form submission
         document.addEventListener('DOMContentLoaded', async function() {
-            // Initialize database
-            try {
-                await initDatabase();
-            } catch (error) {
-                console.error('Failed to initialize database:', error);
-            }
-
             // Mobile menu toggle
             const menuToggle = document.getElementById('menu-toggle');
             const navMenu = document.getElementById('nav-menu');
@@ -1986,13 +1910,22 @@
                     submitBtn.disabled = true;
                     
                     try {
-                        // Save to database
-                        await saveMessage({
-                            name: name,
-                            email: email,
-                            subject: subject,
-                            message: message
-                        });
+                        // Save to Supabase
+                        const { data, error } = await supabase
+                            .from('messages')
+                            .insert([
+                                { 
+                                    name: name, 
+                                    email: email, 
+                                    subject: subject, 
+                                    message: message,
+                                    date: new Date().toISOString(),
+                                    status: 'pending',
+                                    read: false
+                                }
+                            ]);
+                        
+                        if (error) throw error;
                         
                         // Show success message
                         showNotification('Your message has been sent successfully! I will get back to you soon.', 'success');

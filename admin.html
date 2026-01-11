@@ -759,7 +759,7 @@
         <i class="fas fa-moon"></i>
     </button>
 
-    <script>
+   <script>
         // Database configuration
         const DB_NAME = 'PortfolioMessagesDB';
         const DB_VERSION = 1;
@@ -835,6 +835,12 @@
             
             // Initialize database and load messages
             initDatabase();
+            
+            // Check for messages from other devices
+            checkForCrossDeviceMessages();
+            
+            // Set up periodic sync check (every 30 seconds)
+            setInterval(checkForCrossDeviceMessages, 30000);
         }
 
         // Initialize database
@@ -868,6 +874,81 @@
                     objectStore.createIndex('date', 'date', { unique: false });
                     objectStore.createIndex('status', 'status', { unique: false });
                     objectStore.createIndex('read', 'read', { unique: false });
+                }
+            };
+        }
+
+        // Check for messages from other devices
+        function checkForCrossDeviceMessages() {
+            // Check localStorage for messages from index page
+            const crossDeviceMessages = localStorage.getItem('cross_device_messages');
+            if (crossDeviceMessages) {
+                try {
+                    const messages = JSON.parse(crossDeviceMessages);
+                    if (Array.isArray(messages) && messages.length > 0) {
+                        saveCrossDeviceMessages(messages);
+                    }
+                } catch (e) {
+                    console.error('Error parsing cross-device messages:', e);
+                }
+            }
+            
+            // Also check for pending messages from other tabs/windows
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'portfolio_new_message' && event.newValue) {
+                    try {
+                        const message = JSON.parse(event.newValue);
+                        saveMessageToDB(message);
+                        localStorage.removeItem('portfolio_new_message');
+                    } catch (e) {
+                        console.error('Error processing storage event:', e);
+                    }
+                }
+            });
+        }
+
+        // Save cross-device messages to IndexedDB
+        function saveCrossDeviceMessages(messages) {
+            if (!db) return;
+            
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const objectStore = transaction.objectStore(STORE_NAME);
+            
+            messages.forEach(message => {
+                // Check if message already exists
+                const checkRequest = objectStore.get(message.id);
+                
+                checkRequest.onsuccess = function() {
+                    if (!checkRequest.result) {
+                        // Message doesn't exist, save it
+                        objectStore.add(message);
+                        console.log('Cross-device message saved:', message.id);
+                    }
+                };
+            });
+            
+            transaction.oncomplete = function() {
+                // Clear the localStorage after saving
+                localStorage.removeItem('cross_device_messages');
+                loadMessages();
+            };
+        }
+
+        // Save a single message to IndexedDB
+        function saveMessageToDB(message) {
+            if (!db) return;
+            
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const objectStore = transaction.objectStore(STORE_NAME);
+            
+            const checkRequest = objectStore.get(message.id);
+            
+            checkRequest.onsuccess = function() {
+                if (!checkRequest.result) {
+                    objectStore.add(message);
+                    console.log('New message saved from storage event:', message.id);
+                    loadMessages();
+                    addActivity(`New message received from ${message.name}`);
                 }
             };
         }
@@ -1204,6 +1285,8 @@
 
         // Refresh messages
         function refreshMessages() {
+            // Check for new messages from other devices
+            checkForCrossDeviceMessages();
             loadMessages();
             addActivity('Refreshed messages list');
         }
